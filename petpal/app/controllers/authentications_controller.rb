@@ -1,13 +1,72 @@
 
 class AuthenticationsController < Devise::RegistrationsController
 
+  #before_filter :authenticate_user!
+
+  prepend_before_filter :authenticate_scope!, only: [:foo]
+
   #
   # Without this, we get the 'missing authenticity token error' on every request
   #
   skip_before_action :verify_authenticity_token, :only => :create
 
   respond_to :json
+
+  def edit
+    STDOUT.write "HELLO THERE\n"
+
+    email = "test\@example.com"
+
+    foo = User.find_by_email(email)
+
+    render :json => foo
+  end
+
+  def foo
+
+  end
+
   def create
+
+    ################ ACCOUNT SERVICE (related to Devise::RegistrationsController)
+    #
+    # Create user
+    # POST /user/register
+    #
+    # Update user
+    # PUT /user/register/edit
+    #
+    # Delete user
+    # DELETE /user/register
+    #
+    ################ AUTH SERVICE (related to Devise::SessionsController)
+    #
+    # Sign in:
+    # POST /user/login
+    # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}' > /Users/per/foo-login.html    #
+    #
+    # Sign out:
+    # DELETE /user/logout
+    # curl -X DELETE http://127.0.0.1:3000/user/logout.json -H "X-User-Email: test@example.com" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" > /Users/per/foo-logout.html
+    #
+    # Verify token
+    # Speculation: GET /user/auth/
+    #
+    ############### ACCOUNT SERVICE (our own non-devise controller...)
+    #
+    # Get user by email
+    # GET /user/$email
+    #
+    # Get user by id
+    # GET /user/#id -H "authToken: #$%$#@"
+    #
+    ############### USER DATA SERVICE
+    #
+    # Get my encounters
+    # GET
+    #
+    #
+
 
     #
     # This command can create a new user:
@@ -29,7 +88,7 @@ class AuthenticationsController < Devise::RegistrationsController
     #  http://stackoverflow.com/questions/22753243/activemodelforbiddenattributeserror-while-using-devise-for-registeration
     #
 
-	respond_to do |format|  
+	  respond_to do |format|
 	    format.json {
 
         	build_resource(sign_up_params)
@@ -40,7 +99,7 @@ class AuthenticationsController < Devise::RegistrationsController
             #STDOUT.write "resource=#{resource}\n"
 
 	        if resource.save
-	        	render :status => 200, :json => resource
+	          render :status => 200, :json => resource
 	      	else
 	        	render :json => resource.errors, :status => :unprocessable_entity
 		    end
