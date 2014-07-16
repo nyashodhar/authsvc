@@ -21,3 +21,8 @@
 
 en:
   hello: "Hello world"
+
+  # This is for SessionsController.verify action
+  token_verification_failed: "User not logged in VANILLA"
+
+  # This is for RegistrationsController
