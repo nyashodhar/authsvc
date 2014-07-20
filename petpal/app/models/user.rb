@@ -1,5 +1,12 @@
 class User < ActiveRecord::Base
 
+  #
+  # These scopes are used to allow the application to filter
+  # out users that have been deleted
+  #
+  scope :active, -> { where(inactive: nil) }
+  scope :deleted, -> { where(inactive: true) }
+
   def soft_delete
     # assuming you have deleted_at column added already
     update_attribute(:deleted_at, Time.current)

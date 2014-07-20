@@ -28,6 +28,8 @@ class RegistrationsController < Devise::RegistrationsController
   #################
   # Look up user
   # GET /user/register/edit
+  # If the user already was deleted, the user will get a 403 error passed along from
+  # the verifyToken method
   # curl -v -X GET http://127.0.0.1:3000/user/lookup -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   #################
   def lookup
@@ -41,6 +43,8 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   # Update user
   # PUT /user/register
+  # If the user already was deleted, the user will get a 403 error passed along from
+  # the verifyToken method
   # curl -v -X PUT http://127.0.0.1:3000/user/register.json -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def editUser
@@ -53,11 +57,17 @@ class RegistrationsController < Devise::RegistrationsController
         format.json {
 
           #STDOUT.write "UPDATE: authenticated userInfo.id: #{userInfo.id}\n"
+
+          #
+          # Note: It's OK to no apply the active user scope here, active
+          # scope was already applied in verifyToken
+          #
+
           user = User.find_by_id(userInfo.id)
           #STDOUT.write "UPDATE: user before update: #{user.inspect}\n"
 
           ##
-          ## TODO: Currently the password can be update without specifying the old
+          ## TODO: Currently the password can be updated without specifying the old
           ## password and verifying that the old password 'checks out'
           ##
 
@@ -93,12 +103,14 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   # Delete the user - This will put 'now' as 'deleted_at' in the user object
   # and set 'invactive' to true.
+  # If the user already was deleted, the user will get a 403 error passed along from
+  # the verifyToken method
   # curl -v -X DELETE http://127.0.0.1:3000/user/register.json -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
   def deleteUser
     userInfo = verifyToken(request)
     if(!userInfo.blank?)
-      user = User.find_by_id(userInfo.id)
+      user = User.deleted.merge(User.active).find_by_id(userInfo.id)
       user.soft_delete
       render :status => 204, :json => ""
     end
@@ -111,9 +123,8 @@ class RegistrationsController < Devise::RegistrationsController
   # Other methods must check if returned userInfo is blank before proceeding with their processing
   ##################
   def verifyToken(request)
-
     token = request.headers['X-User-Token']
-    userInfo = User.select("id, email").where("authentication_token=?", token).limit(1)
+    userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
     if(userInfo.blank?)
       render :status => 403, :json => I18n.t("token_verification_failed")
     end

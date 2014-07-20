@@ -23,13 +23,13 @@ class SessionsController < Devise::SessionsController
   ################
   # Verify token
   # GET /user/token/verify
-  # curl -X GET http://127.0.0.1:
+  # curl -X GET http://127.0.0.1:3000/user/token/verify -H "X-User-Token: m7X3PqsyifJ9VkshxLjn"
   ################
   def verify
     token = request.headers['X-User-Token']
-    userInfo = User.select("id, email").where("authentication_token=?", token).limit(1)
+    userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
 
-    if(userInfo == nil)
+    if(userInfo.blank?)
       render :status => 403, :json => I18n.t("token_verification_failed")
     else
       # TODO: Refresh the expiration time of the token
@@ -43,6 +43,10 @@ class SessionsController < Devise::SessionsController
   # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
   ################
   def create
+    #
+    # TODO: We need to limit this to active user scope only!!
+    # It's currently possible to obtain auth tokens for deleted users
+    #
     super
   end
 
