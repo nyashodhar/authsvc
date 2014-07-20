@@ -1,27 +1,27 @@
-################ ACCOUNT SERVICE (related to Devise::RegistrationsController)
+###################################
 #
-# TODO: Implement and test this
-# Update user
-# PUT /user/register
-# curl -v -X PUT http://127.0.0.1:3000/user/register.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+# This controller implements account functionality
 #
-# TODO: Implement a delete request handler
+# Create user
+# Edit user
 # Delete user
-# DELETE /user/register
+# Look up user
+#
+# All actions in this controller are authenticated via token,
+# except create operation.
+#
+###################################
 #
 # TODO: Maybe this will be used in other controller, e.g. ProfilesController
 # Get user by email
 # GET /user/$email
 #
-# Get user by id
-# GET /user/#id -H "authToken: #$%$#@"
-#
-##################
+###################################
 
 class RegistrationsController < Devise::RegistrationsController
 
   # Required to for devise to not require the presence of an authenticity token
-  skip_before_action :verify_authenticity_token, :only => [:create, :update, :editUser]
+  skip_before_action :verify_authenticity_token, :only => [:create, :update, :editUser, :deleteUser]
 
   respond_to :json
 
@@ -45,7 +45,7 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   def editUser
 
-    STDOUT.write "UPDATE: HELLO\n"
+    #STDOUT.write "UPDATE: HELLO\n"
 
     userInfo = verifyToken(request)
     if(!userInfo.blank?)
@@ -88,6 +88,20 @@ class RegistrationsController < Devise::RegistrationsController
 		    end
 	    }
 	  end
+  end
+
+  ##################
+  # Delete the user - This will put 'now' as 'deleted_at' in the user object
+  # and set 'invactive' to true.
+  # curl -v -X DELETE http://127.0.0.1:3000/user/register.json -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  ##################
+  def deleteUser
+    userInfo = verifyToken(request)
+    if(!userInfo.blank?)
+      user = User.find_by_id(userInfo.id)
+      user.soft_delete
+      render :status => 204, :json => ""
+    end
   end
 
   private

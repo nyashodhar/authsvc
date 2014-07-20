@@ -1,5 +1,11 @@
 class User < ActiveRecord::Base
 
+  def soft_delete
+    # assuming you have deleted_at column added already
+    update_attribute(:deleted_at, Time.current)
+    update_attribute(:inactive, true)
+  end
+
   # This is for simple_token_authentication:
   acts_as_token_authenticatable
 

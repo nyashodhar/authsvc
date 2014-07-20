@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140715052855) do
+ActiveRecord::Schema.define(version: 20140720194843) do
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -27,6 +27,8 @@ ActiveRecord::Schema.define(version: 20140715052855) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "authentication_token"
+    t.datetime "deleted_at"
+    t.boolean  "inactive"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token"

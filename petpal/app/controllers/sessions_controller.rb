@@ -30,7 +30,7 @@ class SessionsController < Devise::SessionsController
     userInfo = User.select("id, email").where("authentication_token=?", token).limit(1)
 
     if(userInfo == nil)
-      render :status => 404, :json => I18n.t("token_verification_failed")
+      render :status => 403, :json => I18n.t("token_verification_failed")
     else
       # TODO: Refresh the expiration time of the token
       render :status => 200, :json => userInfo[0]
