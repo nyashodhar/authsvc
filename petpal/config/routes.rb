@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'profiles/secureLookup', to:'profiles#secureLookup', as: 'secureLookup'
+
   devise_scope :user do
     get 'user/token/verify', to: 'sessions#verify', as: 'verify'
     get 'user/lookup', to: 'registrations#lookup', as: 'lookup'
@@ -9,6 +11,7 @@ Rails.application.routes.draw do
 
   devise_for :users, path: "user", path_names: { sign_in: 'login', sign_out: 'logout', password: 'secret', confirmation: 'verification', unlock: 'unblock', registration: 'register', sign_up: 'cmon_let_me_in' }, :controllers => {:registrations => "registrations", :sessions => "sessions" }
   get 'pages/home'
+
 
 
   ##devise_for :users, :controllers => {:registrations => "registrations"}

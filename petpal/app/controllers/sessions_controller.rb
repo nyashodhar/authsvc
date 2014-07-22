@@ -26,6 +26,9 @@ class SessionsController < Devise::SessionsController
   # curl -X GET http://127.0.0.1:3000/user/token/verify -H "X-User-Token: m7X3PqsyifJ9VkshxLjn"
   ################
   def verify
+
+    STDOUT.write "SessionsController#verify: HELLO THERE\n"
+
     token = request.headers['X-User-Token']
     userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
 
