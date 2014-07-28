@@ -9,7 +9,7 @@ class ProfilesController < ActionController::Base
   require 'net/http'
   require 'json'
 
-  before_action :verifyToken
+  before_action :myFilter
 
   def secureLookup
     STDOUT.write "My super cool controller\n"
@@ -17,11 +17,17 @@ class ProfilesController < ActionController::Base
   end
 
   private
+
+    def myFilter
+      #head :forbidden
+      render :status => 403, :json => I18n.t("token_verification_failed")
+    end
+
     def verifyToken
 
       STDOUT.write "My super cool filter\n"
 
-      authURL = "http://127.0.0.1:3000/user/token/verify"
+      authURL = "http://192.168.1.38:3000/user/token/verify"
 
       # X-User-Token: m7X3PqsyifJ9VkshxLjn
 

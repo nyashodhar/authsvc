@@ -20,6 +20,8 @@
 
 class RegistrationsController < Devise::RegistrationsController
 
+  include ApplicationHelper
+
   # Required to for devise to not require the presence of an authenticity token
   skip_before_action :verify_authenticity_token, :only => [:create, :update, :editUser, :deleteUser]
 
@@ -30,10 +32,17 @@ class RegistrationsController < Devise::RegistrationsController
   # GET /user/register/edit
   # If the user already was deleted, the user will get a 403 error passed along from
   # the verifyToken method
-  # curl -v -X GET http://127.0.0.1:3000/user/lookup -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  # curl -v -X GET http://127.0.0.1:3000/user/lookup -H "X-User-Token: eXcPsqL-19yzxVpYceeF"
   #################
   def lookup
-    userInfo = verifyToken(request)
+
+    STDOUT.write "current_user = #{current_user.inspect}\n"
+    STDOUT.write "session = #{session.inspect}\n"
+    #render :status => 200, :json => "Hola"
+
+    #userInfo = User.find_by_id(session[:user_id]))
+
+    userInfo = getLoggedInUser(request)
     if(!userInfo.blank?)
       # TODO: Refresh the expiration time of the token
       render :status => 200, :json => userInfo
@@ -51,7 +60,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     #STDOUT.write "UPDATE: HELLO\n"
 
-    userInfo = verifyToken(request)
+    userInfo = getLoggedInUser(request)
     if(!userInfo.blank?)
       respond_to do |format|
         format.json {
@@ -108,7 +117,7 @@ class RegistrationsController < Devise::RegistrationsController
   # curl -v -X DELETE http://127.0.0.1:3000/user/register.json -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
   def deleteUser
-    userInfo = verifyToken(request)
+    userInfo = getLoggedInUser(request)
     if(!userInfo.blank?)
       user = User.deleted.merge(User.active).find_by_id(userInfo.id)
       user.soft_delete
@@ -122,13 +131,20 @@ class RegistrationsController < Devise::RegistrationsController
   # Sends a 403 JSON response if the auth token is not valid.
   # Other methods must check if returned userInfo is blank before proceeding with their processing
   ##################
-  def verifyToken(request)
-    token = request.headers['X-User-Token']
-    userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
-    if(userInfo.blank?)
-      render :status => 403, :json => I18n.t("token_verification_failed")
-    end
-    return userInfo[0]
-  end
+  #def verifyToken(request)
+
+    # TODO: We need to have expiring tokens
+    # Get the TTL from
+    #
+    #   Rails.application.config.auth_token_ttl_ms
+    #
+
+  #  token = request.headers['X-User-Token']
+  #  userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
+  #  if(userInfo.blank?)
+  #    render :status => 403, :json => I18n.t("token_verification_failed")
+  #  end
+  #  return userInfo[0]
+  #end
 
 end

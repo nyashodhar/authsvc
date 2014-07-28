@@ -12,6 +12,8 @@
 ########################################################
 class SessionsController < Devise::SessionsController
 
+  include ApplicationHelper
+
   # Required to for devise to not require the presence of an authenticity token
   skip_before_action :verify_authenticity_token, :only => [:create, :destroy]
 
@@ -23,21 +25,29 @@ class SessionsController < Devise::SessionsController
   ################
   # Verify token
   # GET /user/token/verify
-  # curl -X GET http://127.0.0.1:3000/user/token/verify -H "X-User-Token: m7X3PqsyifJ9VkshxLjn"
+  # curl -X GET http://127.0.0.1:3000/user/token/verify -H "X-User-Token: eXcPsqL-19yzxVpYceeF"
   ################
   def verify
 
     STDOUT.write "SessionsController#verify: HELLO THERE\n"
+    STDOUT.write "current_user = #{current_user.inspect}\n"
+    STDOUT.write "session[:userId] = #{session[:userId]}\n"
+    STDOUT.write "session = #{session.inspect}\n"
 
     token = request.headers['X-User-Token']
-    userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
 
-    if(userInfo.blank?)
-      render :status => 403, :json => I18n.t("token_verification_failed")
-    else
-      # TODO: Refresh the expiration time of the token
-      render :status => 200, :json => userInfo[0]
-    end
+    # Note: This method is in ApplicationHelper
+    userInfo = getLoggedInUser(request)
+
+    # Note: This method is in ApplicationHelper
+    renderAuthResponse(userInfo)
+
+    #if(userInfo.blank?)
+    #  render :status => 403, :json => I18n.t("token_verification_failed")
+    #else
+    #  # TODO: Refresh the expiration time of the token
+    #  render :status => 200, :json => userInfo[0]
+    #end
   end
 
   ################
@@ -45,11 +55,16 @@ class SessionsController < Devise::SessionsController
   # POST /user/login
   # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
   ################
+
+  #
+  # Note: Before a sign-in, we need to check if the current token is expired
+  # If it's expired, we need to make sure it's reset. Otherwise the user will
+  # be allowed to continue to use the auth token even after it has expired!
+  #
+
+  before_action :clearStaleTokenBeforeSignIn, :only => [:create]
+
   def create
-    #
-    # TODO: We need to limit this to active user scope only!!
-    # It's currently possible to obtain auth tokens for deleted users
-    #
     super
   end
 
