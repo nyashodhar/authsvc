@@ -36,6 +36,10 @@ Rails.application.configure do
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
+  #Logger Config
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-dev.log'))
+  config.log_level = :info
+
   #Devise config
   config.action_mailer.default_url_options = { host: 'localhost:3000' }
 

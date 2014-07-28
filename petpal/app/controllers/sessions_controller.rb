@@ -53,7 +53,7 @@ class SessionsController < Devise::SessionsController
   ################
   # Sign in:
   # POST /user/login
-  # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
+  # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test4@example.com", "password":"Test1234"}}'
   ################
 
   #

@@ -1,0 +1,108 @@
+# Logfile created on 2014-07-27 20:22:26 -0700 by logger.rb/44203
+[0;37m2014-07-27 21:04:42.850[0m [[0;37mmeh[0m]  (pid:71302)
+[0;37m2014-07-27 21:04:42.850[0m [[0;37mmeh[0m]  (pid:71302)
+[0;37m2014-07-27 21:04:42.850[0m [[32mfyi[0m] Started POST "/user/login.json" for 127.0.0.1 at 2014-07-27 21:04:42 -0700 (pid:71302)
+[0;37m2014-07-27 21:04:42.857[0m [[0;37mmeh[0m] [1m[36mActiveRecord::SchemaMigration Load (0.4ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m (pid:71302)
+[0;37m2014-07-27 21:04:42.879[0m [[32mfyi[0m] Processing by SessionsController#create as JSON (pid:71302)
+[0;37m2014-07-27 21:04:42.879[0m [[32mfyi[0m] Parameters: {"user"=>{"email"=>"test4@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test4@example.com", "password"=>"[FILTERED]"}}} (pid:71302)
+[0;37m2014-07-27 21:04:42.961[0m [[0;37mmeh[0m] [1m[35mUser Load (0.4ms)[0m  SELECT  id, email, "users"."current_sign_in_at" FROM "users"  WHERE "users"."inactive" IS NULL AND (email='test4@example.com') LIMIT 1 (pid:71302)
+[0;37m2014-07-27 21:04:42.966[0m [[0;37mmeh[0m] [1m[36mUser Load (0.1ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."email" = 'test4@example.com'  ORDER BY "users"."id" ASC LIMIT 1[0m (pid:71302)
+[0;37m2014-07-27 21:04:42.966[0m [[32mfyi[0m] Completed 401 Unauthorized in 87ms (pid:71302)
+[0;37m2014-07-27 21:05:02.237[0m [[0;37mmeh[0m] [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m (pid:71525)
+[0;37m2014-07-27 21:05:02.243[0m [[0;37mmeh[0m] [1m[35mActiveRecord::SchemaMigration Load (0.1ms)[0m  SELECT "schema_migrations".* FROM "schema_migrations" (pid:71525)
+[0;37m2014-07-27 21:05:02.244[0m [[0;37mmeh[0m] [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_authentication_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_authentication_token' AND type='index'
+[0m (pid:71525)
+[0;37m2014-07-27 21:05:02.248[0m [[0;37mmeh[0m] [1m[35m (0.1ms)[0m              SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_reset_password_token' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_reset_password_token' AND type='index' (pid:71525)
+[0;37m2014-07-27 21:05:02.248[0m [[0;37mmeh[0m] [1m[36m (0.1ms)[0m  [1m            SELECT sql
+            FROM sqlite_master
+            WHERE name='index_users_on_email' AND type='index'
+            UNION ALL
+            SELECT sql
+            FROM sqlite_temp_master
+            WHERE name='index_users_on_email' AND type='index'
+[0m (pid:71525)
+[0;37m2014-07-27 21:05:18.869[0m [[0;37mmeh[0m]  (pid:71302)
+[0;37m2014-07-27 21:05:18.869[0m [[0;37mmeh[0m]  (pid:71302)
+[0;37m2014-07-27 21:05:18.869[0m [[32mfyi[0m] Started POST "/user/register.json" for 127.0.0.1 at 2014-07-27 21:05:18 -0700 (pid:71302)
+[0;37m2014-07-27 21:05:18.917[0m [[32mfyi[0m] Processing by RegistrationsController#create as JSON (pid:71302)
+[0;37m2014-07-27 21:05:18.917[0m [[32mfyi[0m] Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}} (pid:71302)
+[0;37m2014-07-27 21:05:18.985[0m [[0;37mmeh[0m] [1m[35m (0.1ms)[0m  begin transaction (pid:71302)
+[0;37m2014-07-27 21:05:18.998[0m [[0;37mmeh[0m] [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users"  WHERE "users"."email" = 'test@example.com' LIMIT 1[0m (pid:71302)
+[0;37m2014-07-27 21:05:18.999[0m [[0;37mmeh[0m] [1m[35mUser Exists (0.4ms)[0m  SELECT  1 AS one FROM "users"  WHERE "users"."authentication_token" = '9wo4F1JzNnX-ETRWGLq_' LIMIT 1 (pid:71302)
+[0;37m2014-07-27 21:05:19.182[0m [[31mwtf[0m] Binary data inserted for `string` type on column `encrypted_password` (pid:71302)
+[0;37m2014-07-27 21:05:19.347[0m [[0;37mmeh[0m] [1m[36mSQL (1.4ms)[0m  [1mINSERT INTO "users" ("authentication_token", "created_at", "email", "encrypted_password", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["authentication_token", "9wo4F1JzNnX-ETRWGLq_"], ["created_at", "2014-07-28 04:05:18.999439"], ["email", "test@example.com"], ["encrypted_password", "$2a$10$m.KXEomcYsUColAZ.bUEFu2q7Jt1a0kTQ8KCqJLLeWryThA.HxLoG"], ["updated_at", "2014-07-28 04:05:18.999439"]] (pid:71302)
+[0;37m2014-07-27 21:05:19.630[0m [[0;37mmeh[0m] [1m[35m (2.6ms)[0m  commit transaction (pid:71302)
+[0;37m2014-07-27 21:05:19.699[0m [[32mfyi[0m] Completed 200 OK in 90ms (Views: 0.5ms | ActiveRecord: 5.0ms) (pid:71302)
+[0;37m2014-07-27 21:05:36.941[0m [[0;37mmeh[0m]  (pid:71302)
+[0;37m2014-07-27 21:05:36.941[0m [[0;37mmeh[0m]  (pid:71302)
+[0;37m2014-07-27 21:05:36.942[0m [[32mfyi[0m] Started POST "/user/login.json" for 127.0.0.1 at 2014-07-27 21:05:36 -0700 (pid:71302)
+[0;37m2014-07-27 21:05:36.101[0m [[32mfyi[0m] Processing by SessionsController#create as JSON (pid:71302)
+[0;37m2014-07-27 21:05:36.101[0m [[32mfyi[0m] Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}}} (pid:71302)
+[0;37m2014-07-27 21:05:36.163[0m [[0;37mmeh[0m] [1m[36mUser Load (0.2ms)[0m  [1mSELECT  id, email, "users"."current_sign_in_at" FROM "users"  WHERE "users"."inactive" IS NULL AND (email='test@example.com') LIMIT 1[0m (pid:71302)
+[0;37m2014-07-27 21:05:36.164[0m [[32mfyi[0m] Completed 500 Internal Server Error in 62ms (pid:71302)
+[0;37m2014-07-27 21:05:36.165[0m [[31momg[0m] NoMethodError (undefined method `to_datetime' for nil:NilClass):
+  app/helpers/application_helper.rb:47:in `clearStaleTokenBeforeSignIn' (pid:71302)
+[0;37m2014-07-27 21:05:36.195[0m [[32mfyi[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/_source.erb (0.6ms) (pid:71302)
+[0;37m2014-07-27 21:05:36.201[0m [[32mfyi[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (1.1ms) (pid:71302)
+[0;37m2014-07-27 21:05:36.206[0m [[32mfyi[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (1.0ms) (pid:71302)
+[0;37m2014-07-27 21:05:36.206[0m [[32mfyi[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (17.6ms) (pid:71302)
+[0;37m2014-07-27 21:10:00.702[0m [[0;37mDEBUG[0m]  (pid:71549)
+[0;37m2014-07-27 21:10:00.702[0m [[0;37mDEBUG[0m]  (pid:71549)
+[0;37m2014-07-27 21:10:00.702[0m [[32mINFO[0m] Started POST "/user/login.json" for 127.0.0.1 at 2014-07-27 21:10:00 -0700 (pid:71549)
+[0;37m2014-07-27 21:10:00.707[0m [[0;37mDEBUG[0m] [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m (pid:71549)
+[0;37m2014-07-27 21:10:00.725[0m [[32mINFO[0m] Processing by SessionsController#create as JSON (pid:71549)
+[0;37m2014-07-27 21:10:00.725[0m [[32mINFO[0m] Parameters: {"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test@example.com", "password"=>"[FILTERED]"}}} (pid:71549)
+[0;37m2014-07-27 21:10:00.806[0m [[0;37mDEBUG[0m] [1m[35mUser Load (0.2ms)[0m  SELECT  id, email, "users"."current_sign_in_at" FROM "users"  WHERE "users"."inactive" IS NULL AND (email='test@example.com') LIMIT 1 (pid:71549)
+[0;37m2014-07-27 21:10:00.806[0m [[32mINFO[0m] Completed 500 Internal Server Error in 81ms (pid:71549)
+[0;37m2014-07-27 21:10:00.807[0m [[31mPANTSONFIRE[0m] NoMethodError (undefined method `to_datetime' for nil:NilClass):
+  app/helpers/application_helper.rb:47:in `clearStaleTokenBeforeSignIn' (pid:71549)
+[0;37m2014-07-27 21:10:00.824[0m [[32mINFO[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/_source.erb (0.5ms) (pid:71549)
+[0;37m2014-07-27 21:10:00.828[0m [[32mINFO[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/_trace.html.erb (0.9ms) (pid:71549)
+[0;37m2014-07-27 21:10:00.832[0m [[32mINFO[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/_request_and_response.html.erb (0.8ms) (pid:71549)
+[0;37m2014-07-27 21:10:00.832[0m [[32mINFO[0m] Rendered /Users/yashodhar/.rvm/gems/ruby-2.1.2/gems/actionpack-4.1.4/lib/action_dispatch/middleware/templates/rescues/diagnostics.erb within rescues/layout (12.6ms) (pid:71549)
+
+
+Started POST "/user/login.json" for 127.0.0.1 at 2014-07-27 21:21:23 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by SessionsController#create as JSON
+  Parameters: {"user"=>{"email"=>"test1234@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test1234@example.com", "password"=>"[FILTERED]"}}}
+  [1m[35mUser Load (0.2ms)[0m  SELECT  id, email, "users"."current_sign_in_at" FROM "users"  WHERE "users"."inactive" IS NULL AND (email='test1234@example.com') LIMIT 1
+  [1m[36mUser Load (0.2ms)[0m  [1mSELECT  "users".* FROM "users"  WHERE "users"."email" = 'test1234@example.com'  ORDER BY "users"."id" ASC LIMIT 1[0m
+Completed 401 Unauthorized in 89ms
+
+
+Started POST "/user/register.json" for 127.0.0.1 at 2014-07-27 21:21:41 -0700
+Processing by RegistrationsController#create as JSON
+  Parameters: {"user"=>{"email"=>"test1234@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"test1234@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}}
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users"  WHERE "users"."email" = 'test1234@example.com' LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users"  WHERE "users"."authentication_token" = 'vrnEwwyTx7zxxwGFu3vX' LIMIT 1
+Binary data inserted for `string` type on column `encrypted_password`
+  [1m[36mSQL (0.4ms)[0m  [1mINSERT INTO "users" ("authentication_token", "created_at", "email", "encrypted_password", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["authentication_token", "vrnEwwyTx7zxxwGFu3vX"], ["created_at", "2014-07-28 04:21:42.022896"], ["email", "test1234@example.com"], ["encrypted_password", "$2a$10$46uqGOug.ayOW0sqeLmuZ.il5TNI3XwzlNoXAzyMK52AeO2WXw8Ja"], ["updated_at", "2014-07-28 04:21:42.022896"]]
+  [1m[35m (9.2ms)[0m  commit transaction
+Completed 200 OK in 89ms (Views: 0.5ms | ActiveRecord: 9.9ms)
+
+
+Started POST "/user/register.json" for 127.0.0.1 at 2014-07-27 21:30:38 -0700
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT "schema_migrations".* FROM "schema_migrations"[0m
+Processing by RegistrationsController#create as JSON
+  Parameters: {"user"=>{"email"=>"test14@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}, "registration"=>{"user"=>{"email"=>"test14@example.com", "password"=>"[FILTERED]", "password_confirmation"=>"[FILTERED]"}}}
+  [1m[35m (0.1ms)[0m  begin transaction
+  [1m[36mUser Exists (0.1ms)[0m  [1mSELECT  1 AS one FROM "users"  WHERE "users"."email" = 'test14@example.com' LIMIT 1[0m
+  [1m[35mUser Exists (0.1ms)[0m  SELECT  1 AS one FROM "users"  WHERE "users"."authentication_token" = 'zavrCwnewFAg7x_t3sM8' LIMIT 1
+Binary data inserted for `string` type on column `encrypted_password`
+  [1m[36mSQL (0.5ms)[0m  [1mINSERT INTO "users" ("authentication_token", "created_at", "email", "encrypted_password", "updated_at") VALUES (?, ?, ?, ?, ?)[0m  [["authentication_token", "zavrCwnewFAg7x_t3sM8"], ["created_at", "2014-07-28 04:30:38.644719"], ["email", "test14@example.com"], ["encrypted_password", "$2a$10$7C7cEM3Udf6e8qYVP/Br5uRnHKb74FnJFzfBgmwea95UwHaXp0tXq"], ["updated_at", "2014-07-28 04:30:38.644719"]]
+  [1m[35m (8.8ms)[0m  commit transaction
+Completed 200 OK in 102ms (Views: 0.5ms | ActiveRecord: 9.9ms)
