@@ -1,7 +1,7 @@
 Rails.application.configure do
 
   # Setting for auth token expiration - dev TTL=10s
-  config.auth_token_ttl_ms = 30000
+  config.auth_token_ttl_ms = 600000
 
   # Settings specified here will take precedence over those in config/application.rb.
 

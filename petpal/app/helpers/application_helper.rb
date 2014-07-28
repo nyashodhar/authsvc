@@ -18,6 +18,8 @@ module ApplicationHelper
   ########################################################################
   def ensureLoggedInAndAuthTokenNotExpired
 
+    STDOUT.write "***** ensureLoggedInAndAuthTokenNotExpired\n"
+
     token = request.headers['X-User-Token']
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
@@ -90,10 +92,10 @@ module ApplicationHelper
     end
   end
 
-  def getLoggedInUser(request)
+  def getUserByAuthToken(request)
     token = request.headers['X-User-Token']
-    userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
-    return userInfo[0]
+    user = User.find_by_authentication_token(token)
+    return user
   end
 
   #
