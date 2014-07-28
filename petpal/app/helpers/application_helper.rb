@@ -1,17 +1,59 @@
 module ApplicationHelper
 
+  ########################################################################
+  # This method is in use ALL PROTECTED APIS.
   #
-  # TFOR ALL PROTECTED APIS
-  # Verify sign in is still valid
-  # if not valid => 403
+  # This method verifies that the user is logged in and that the auth token
+  # is not expired.
   #
+  # If the user is not logged in, this method will give a 403 response
+  # and control will not reach the protected controller action.
+  #
+  # If the user is logged in, but the auth token is expired, this method
+  # will give a 403 response and control will not reach the protected
+  # controller action.
+  #
+  # If the user is logged in and the auth token is not expired, this
+  # method will allow control to be reach the controller action.
+  ########################################################################
+  def ensureLoggedInAndAuthTokenNotExpired
 
-  def ensureAuthTokenNotExpired
+    token = request.headers['X-User-Token']
+
+    if(token.blank?)
+      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request, responding with 401\n"
+      render :status => 401, :json => I18n.t("401response")
+      return
+    end
+
+    userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
+    theUser = userInfo[0]
+
+    if(theUser.blank?)
+      # Nobody is logged in for this auth token => 403
+      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}, responding with 403\n"
+      render :status => 403, :json => I18n.t("403response")
+      return
+    end
+
+    #
+    # There is a sign-in for this auth token, so we need to ensure
+    # the sign-in is not expired
+    #
+
+    if(isLoginExpired(theUser))
+      # The sign-in is expired => 403
+      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired, responding with 403\n"
+      render :status => 403, :json => I18n.t("403response")
+      return
+    end
+
+    # Things are great, control will now pass to the controller action
 
   end
 
   ########################################################################
-  # This method is only use for SIGN IN.
+  # This method is only used for SIGN IN.
   #
   # If the user's auth token is expired at sign-in time, then this method
   # will ensure that a new auth token generation is triggered for the user.
@@ -42,19 +84,11 @@ module ApplicationHelper
       return
     end
 
-    now = DateTime.now
-    currentSignInAtActiveSupportTimeWithZone = theUser[:current_sign_in_at]
-    currentSignInAtDateTime = currentSignInAtActiveSupportTimeWithZone.to_datetime
+    if(isLoginExpired(theUser))
 
-    tokenAgeDays = now - currentSignInAtDateTime
-    tokenAgeMillis = (tokenAgeDays * 24 * 60 * 60 * 1000).to_i
-
-    tokenTTLMS = Rails.application.config.auth_token_ttl_ms
-
-    if(tokenAgeMillis > tokenTTLMS)
-      staleTimeMS = tokenAgeMillis - tokenTTLMS
-      STDOUT.write "clearStaleTokenBeforeSignIn(): The authentication token for user #{theUser.id} expired #{staleTimeMS} millis ago. Clearing the user's auth token to force new token generation\n"
+      STDOUT.write "clearStaleTokenBeforeSignIn(): The sign-in for user #{theUser.id} is expired. Clearing the user's auth token to force new token generation.\n"
       theUserId = theUser.id
+
       #
       # Note: This actually will trigger an immediate regeneration of a new auth-token
       # by the simple token authentication mechanism!
@@ -63,25 +97,38 @@ module ApplicationHelper
     end
   end
 
-  def getLoggedInUser(request)
+
+  def getUserByAuthToken(request)
     token = request.headers['X-User-Token']
-    userInfo = User.deleted.merge(User.active).select("id, email").where("authentication_token=?", token).limit(1)
-    return userInfo[0]
+    user = User.find_by_authentication_token(token)
+    return user
   end
 
-  #
-  # Render JSON response for a user authentication
-  #
-  # If the user info is blank => 403, else 200
-  #
-  def renderAuthResponse(userInfo)
+  private
 
-    #STDOUT.write "renderAuthResponse: userInfo = #{userInfo.inspect}"
+  def isLoginExpired(theUser)
 
-    if(userInfo.blank?)
-      render :status => 403, :json => I18n.t("token_verification_failed")
-    else
-      render :status => 200, :json => userInfo
+    currentSignInAtActiveSupportTimeWithZone = theUser[:current_sign_in_at]
+    if(currentSignInAtActiveSupportTimeWithZone.blank?)
+      STDOUT.write "isLoginExpired(): The user #{theUser.id} has never logged in. Treating login as expired.\n"
+      return true
     end
+
+    currentSignInAtDateTime = currentSignInAtActiveSupportTimeWithZone.to_datetime
+
+    now = DateTime.now
+    tokenAgeDays = now - currentSignInAtDateTime
+    tokenAgeMillis = (tokenAgeDays * 24 * 60 * 60 * 1000).to_i
+
+    tokenTTLMS = Rails.application.config.auth_token_ttl_ms
+
+    if(tokenAgeMillis > tokenTTLMS)
+      staleTimeMS = tokenAgeMillis - tokenTTLMS
+      STDOUT.write "isLoginExpired(): The authentication token for user #{theUser.id} expired #{staleTimeMS} millis ago.\n"
+      return true
+    end
+
+    return false
   end
+
 end
