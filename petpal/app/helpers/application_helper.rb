@@ -6,27 +6,38 @@ module ApplicationHelper
   # if not valid => 403
   #
 
+  def ensureAuthTokenNotExpired
+
+  end
+
+  ########################################################################
+  # This method is only use for SIGN IN.
   #
-  # FOR SIGN IN ONLY (clear token to prevent sign in when token is stale for whatever reason)
+  # If the user's auth token is expired at sign-in time, then this method
+  # will ensure that a new auth token generation is triggered for the user.
   #
-  # Note: It's assumed that this module is included from the controller, and hence the request
-  # object is available at this point.
-  #
+  # This ensures that expired auth tokens are not allowed to linger. If no
+  # user is found for the email, then the control is given back to the
+  # sign-in controller to fail the login in the normal fashion.
+  ########################################################################
   def clearStaleTokenBeforeSignIn
+
+    #
+    # Technical Note: It's assumed that this module is included from the controller, and hence the request
+    # object is available at this point.
+    #
 
     myTestUserSignParams = User.new(sign_in_params)
     email = myTestUserSignParams.email
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("email=?", email).limit(1)
-
     theUser = userInfo[0]
-    if(theUser.blank?)
 
+    if(theUser.blank?)
       #
       # We couldn't find a user with the given email => Just do a return here
       # Control will flow directly to the sign in controller which will handle
       # the sign-in failure appropriately.
       #
-
       STDOUT.write "clearStaleTokenBeforeSignIn(): User could not be found, can't check authentication token staleness and sign-in will fail in controller.\n"
       return
     end
@@ -44,10 +55,12 @@ module ApplicationHelper
       staleTimeMS = tokenAgeMillis - tokenTTLMS
       STDOUT.write "clearStaleTokenBeforeSignIn(): The authentication token for user #{theUser.id} expired #{staleTimeMS} millis ago. Clearing the user's auth token to force new token generation\n"
       theUserId = theUser.id
+      #
+      # Note: This actually will trigger an immediate regeneration of a new auth-token
+      # by the simple token authentication mechanism!
+      #
       User.update(theUserId, :authentication_token => nil)
     end
-
-    theUpdatedUser = User.deleted.merge(User.active).select("id, email", "current_sign_in_at", "authentication_token").where("email=?", email).limit(1)
   end
 
   def getLoggedInUser(request)
