@@ -21,8 +21,5 @@
 
 en:
   hello: "Hello world"
-
-  # This is for SessionsController.verify action
-  token_verification_failed: "User not logged in"
-
-  # This is for RegistrationsController
+  403response: "Not logged in"
+  401response: "Not authorized"

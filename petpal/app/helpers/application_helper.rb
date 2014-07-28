@@ -19,13 +19,20 @@ module ApplicationHelper
   def ensureLoggedInAndAuthTokenNotExpired
 
     token = request.headers['X-User-Token']
+
+    if(token.blank?)
+      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request, responding with 401\n"
+      render :status => 401, :json => I18n.t("401response")
+      return
+    end
+
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
 
     if(theUser.blank?)
       # Nobody is logged in for this auth token => 403
       STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}, responding with 403\n"
-      render :status => 403, :json => I18n.t("token_verification_failed")
+      render :status => 403, :json => I18n.t("403response")
       return
     end
 
@@ -37,7 +44,7 @@ module ApplicationHelper
     if(isLoginExpired(theUser))
       # The sign-in is expired => 403
       STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired, responding with 403\n"
-      render :status => 403, :json => I18n.t("token_verification_failed")
+      render :status => 403, :json => I18n.t("403response")
       return
     end
 
@@ -89,6 +96,7 @@ module ApplicationHelper
       User.update(theUserId, :authentication_token => nil)
     end
   end
+
 
   def getUserByAuthToken(request)
     token = request.headers['X-User-Token']
