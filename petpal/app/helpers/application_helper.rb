@@ -96,22 +96,6 @@ module ApplicationHelper
     return user
   end
 
-  #
-  # Render JSON response for a user authentication
-  #
-  # If the user info is blank => 403, else 200
-  #
-  def renderAuthResponse(userInfo)
-
-    #STDOUT.write "renderAuthResponse: userInfo = #{userInfo.inspect}"
-
-    if(userInfo.blank?)
-      render :status => 403, :json => I18n.t("token_verification_failed")
-    else
-      render :status => 200, :json => userInfo
-    end
-  end
-
   private
 
   def isLoginExpired(theUser)
