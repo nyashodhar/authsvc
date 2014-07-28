@@ -29,9 +29,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   #
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
-  # is not expired  #
+  # is not expired
   #
-  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:lookup, :editUser]
+  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:lookup, :editUser, :deleteUser]
 
   #################
   # Look up user
@@ -89,17 +89,13 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   # Delete the user - This will put 'now' as 'deleted_at' in the user object
   # and set 'invactive' to true.
-  # If the user already was deleted, the user will get a 403 error passed along from
-  # the verifyToken method
-  # curl -v -X DELETE http://127.0.0.1:3000/user/register.json -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  # If the user already was deleted, the client will get a 403 in the authentication filter
+  # curl -v -X DELETE http://127.0.0.1:3000/user/deleteUser.json -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
   def deleteUser
-    userInfo = getLoggedInUser(request)
-    if(!userInfo.blank?)
-      user = User.deleted.merge(User.active).find_by_id(userInfo.id)
-      user.soft_delete
-      render :status => 204, :json => ""
-    end
+    user = getUserByAuthToken(request)
+    user.soft_delete
+    render :status => 204, :json => ""
   end
 
 end

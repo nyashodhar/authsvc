@@ -24,7 +24,7 @@ class SessionsController < Devise::SessionsController
 
   #
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
-  # is not expired  #
+  # is not expired
   #
   before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:verify]
 

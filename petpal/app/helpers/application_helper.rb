@@ -18,8 +18,6 @@ module ApplicationHelper
   ########################################################################
   def ensureLoggedInAndAuthTokenNotExpired
 
-    STDOUT.write "***** ensureLoggedInAndAuthTokenNotExpired\n"
-
     token = request.headers['X-User-Token']
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
@@ -118,10 +116,15 @@ module ApplicationHelper
 
   def isLoginExpired(theUser)
 
-    now = DateTime.now
     currentSignInAtActiveSupportTimeWithZone = theUser[:current_sign_in_at]
+    if(currentSignInAtActiveSupportTimeWithZone.blank?)
+      STDOUT.write "isLoginExpired(): The user #{theUser.id} has never logged in. Treating login as expired.\n"
+      return true
+    end
+
     currentSignInAtDateTime = currentSignInAtActiveSupportTimeWithZone.to_datetime
 
+    now = DateTime.now
     tokenAgeDays = now - currentSignInAtDateTime
     tokenAgeMillis = (tokenAgeDays * 24 * 60 * 60 * 1000).to_i
 
