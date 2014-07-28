@@ -37,7 +37,7 @@ Rails.application.configure do
   config.assets.raise_runtime_errors = true
 
   #Logger Config
-  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-dev.log'))
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-dev.log', 'daily'))
   config.log_level = :info
 
   #Devise config
