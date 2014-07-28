@@ -26,7 +26,7 @@ class SessionsController < Devise::SessionsController
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
   # is not expired
   #
-  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:verify]
+  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:verify, :destroy]
 
   ################
   # Verify token
@@ -34,8 +34,8 @@ class SessionsController < Devise::SessionsController
   # curl -X GET http://127.0.0.1:3000/user/token/verify -H "X-User-Token: GcZy__QhxcxFvdqgpTtz"
   ################
   def verify
-    userInfo = getLoggedInUser(request)
-    render :status => 200, :json => userInfo
+    user = getUserByAuthToken(request)
+    render :status => 200, :json => user
   end
 
   #
@@ -60,6 +60,8 @@ class SessionsController < Devise::SessionsController
   # curl -X DELETE http://127.0.0.1:3000/user/logout.json -H "X-User-Email: test@example.com" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json"
   ################
   def destroy
+    user = getUserByAuthToken(request)
+    clearAuthTokenForUser(user)
     super
   end
 

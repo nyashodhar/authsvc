@@ -21,7 +21,7 @@ module ApplicationHelper
     token = request.headers['X-User-Token']
 
     if(token.blank?)
-      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request, responding with 401\n"
+      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request, responding with 401\n"
       render :status => 401, :json => I18n.t("401response")
       return
     end
@@ -31,7 +31,7 @@ module ApplicationHelper
 
     if(theUser.blank?)
       # Nobody is logged in for this auth token => 403
-      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}, responding with 403\n"
+      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}, responding with 403\n"
       render :status => 403, :json => I18n.t("403response")
       return
     end
@@ -43,7 +43,7 @@ module ApplicationHelper
 
     if(isLoginExpired(theUser))
       # The sign-in is expired => 403
-      STDOUT.write "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired, responding with 403\n"
+      logger.info "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired, responding with 403\n"
       render :status => 403, :json => I18n.t("403response")
       return
     end
@@ -76,17 +76,17 @@ module ApplicationHelper
 
     if(theUser.blank?)
       #
-      # We couldn't find a user with the given email => Just do a return here
-      # Control will flow directly to the sign in controller which will handle
-      # the sign-in failure appropriately.
+      # We couldn't find a user with the given email => Do 401 here.
+      # If we don't take action here, devise will actually do a successful sign-in
       #
-      STDOUT.write "clearStaleTokenBeforeSignIn(): User could not be found, can't check authentication token staleness and sign-in will fail in controller.\n"
+      logger.info "clearStaleTokenBeforeSignIn(): User could not be found, can't check authentication token staleness and sign-in will fail in controller.\n"
+      render :status => 401, :json => I18n.t("401response")
       return
     end
 
     if(isLoginExpired(theUser))
 
-      STDOUT.write "clearStaleTokenBeforeSignIn(): The sign-in for user #{theUser.id} is expired. Clearing the user's auth token to force new token generation.\n"
+      logger.info "clearStaleTokenBeforeSignIn(): The sign-in for user #{theUser.id} is expired. Clearing the user's auth token to force new token generation.\n"
       theUserId = theUser.id
 
       #
@@ -98,10 +98,21 @@ module ApplicationHelper
   end
 
 
+  ##############################################
+  # Retrieves a user object based on the
+  # auth token in the request
+  ##############################################
   def getUserByAuthToken(request)
     token = request.headers['X-User-Token']
     user = User.find_by_authentication_token(token)
     return user
+  end
+
+  ##############################################
+  # Removes the current auth token for a user
+  ##############################################
+  def clearAuthTokenForUser(user)
+    User.update(user.id, :authentication_token => nil)
   end
 
   private
@@ -110,7 +121,7 @@ module ApplicationHelper
 
     currentSignInAtActiveSupportTimeWithZone = theUser[:current_sign_in_at]
     if(currentSignInAtActiveSupportTimeWithZone.blank?)
-      STDOUT.write "isLoginExpired(): The user #{theUser.id} has never logged in. Treating login as expired.\n"
+      logger.info "isLoginExpired(): The user #{theUser.id} has never logged in. Treating login as expired.\n"
       return true
     end
 
@@ -124,7 +135,7 @@ module ApplicationHelper
 
     if(tokenAgeMillis > tokenTTLMS)
       staleTimeMS = tokenAgeMillis - tokenTTLMS
-      STDOUT.write "isLoginExpired(): The authentication token for user #{theUser.id} expired #{staleTimeMS} millis ago.\n"
+      logger.info "isLoginExpired(): The authentication token for user #{theUser.id} expired #{staleTimeMS} millis ago.\n"
       return true
     end
 
