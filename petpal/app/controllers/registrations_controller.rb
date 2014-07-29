@@ -47,23 +47,21 @@ class RegistrationsController < Devise::RegistrationsController
 
   ##################
   # Update user
-  # PUT /user/register
+  # PUT /user/editUser
   # If the user already was deleted, the user will get a 403 error passed along from
   # the verifyToken method
-  # curl -v -X PUT http://127.0.0.1:3000/user/editUser.json -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+  # curl -v -X PUT http://127.0.0.1:3000/user/editUser -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def editUser
+
+    ##
+    ## TODO: Currently the password can be updated without specifying the old
+    ## password and verifying that the old password 'checks out'
+    ##
+
     user = getUserByAuthToken(request)
-    respond_to do |format|
-      format.json {
-        ##
-        ## TODO: Currently the password can be updated without specifying the old
-        ## password and verifying that the old password 'checks out'
-        ##
-        update_resource(user, account_update_params)
-        user.save
-      }
-    end
+    update_resource(user, account_update_params)
+    user.save
     render :status => 200, :json => user
   end
 
