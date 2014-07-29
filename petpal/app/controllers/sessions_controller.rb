@@ -48,10 +48,19 @@ class SessionsController < Devise::SessionsController
   ################
   # Sign in:
   # POST /user/login
-  # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
+  # curl -X POST http://127.0.0.1:3000/user/login -H "Content-Type: application/json" -H "Accept: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
   ################
   def create
-    # TODO: Remove .json requirement for end of this URL
+
+    #
+    # THIS IS A HACK, FIX BY IMPLEMENTING
+    #
+
+    if(request.headers[:HTTP_ACCEPT] != "application/json")
+      logger.info "Invalid Accept header value #{request.headers[:HTTP_ACCEPT]}, request can't be processed.\n"
+      render :status => :unprocessable_entity, :json => I18n.t("422response_invalid_accept_header")
+      return
+    end
     super
   end
 

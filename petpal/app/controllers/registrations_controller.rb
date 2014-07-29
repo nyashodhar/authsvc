@@ -35,7 +35,7 @@ class RegistrationsController < Devise::RegistrationsController
 
   #################
   # Look up user
-  # GET /user/register/edit
+  # GET /user/lookup
   # If the user already was deleted, the user will get a 403 error passed along from
   # the verifyToken method
   # curl -v -X GET http://127.0.0.1:3000/user/lookup -H "X-User-Token: zZGGxQYUcVxHDXfxVysS"
@@ -96,10 +96,11 @@ class RegistrationsController < Devise::RegistrationsController
   end
 
   ##################
-  # Delete the user - This will put 'now' as 'deleted_at' in the user object
-  # and set 'invactive' to true.
+  # Delete the user
+  # DELETE /user/deleteUser
+  # This will put 'now' as 'deleted_at' in the user object and set 'invactive' to true.
   # If the user already was deleted, the client will get a 403 in the authentication filter
-  # curl -v -X DELETE http://127.0.0.1:3000/user/deleteUser.json -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  # curl -v -X DELETE http://127.0.0.1:3000/user/deleteUser -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
   def deleteUser
     user = getUserByAuthToken(request)
