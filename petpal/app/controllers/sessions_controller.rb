@@ -51,6 +51,7 @@ class SessionsController < Devise::SessionsController
   # curl -X POST http://127.0.0.1:3000/user/login.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
   ################
   def create
+    # TODO: Remove .json requirement for end of this URL
     super
   end
 
@@ -60,6 +61,7 @@ class SessionsController < Devise::SessionsController
   # curl -X DELETE http://127.0.0.1:3000/user/logout.json -H "X-User-Email: test@example.com" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json"
   ################
   def destroy
+    # TODO: Remove .json requirement for end of this URL
     user = getUserByAuthToken(request)
     clearAuthTokenForUser(user)
     super

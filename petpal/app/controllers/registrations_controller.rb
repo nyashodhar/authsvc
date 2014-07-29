@@ -45,22 +45,38 @@ class RegistrationsController < Devise::RegistrationsController
     render :status => 200, :json => userInfo
   end
 
-  ##################
+  #######################################################
   # Update user
   # PUT /user/editUser
-  # If the user already was deleted, the user will get a 403 error passed along from
-  # the verifyToken method
-  # curl -v -X PUT http://127.0.0.1:3000/user/editUser -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
-  ##################
+  #
+  # If the password is being updated, the request will
+  # get a 422 if the current password is not provided
+  # correctly
+  #
+  # EXAMPLE:
+  # curl -v -X PUT http://127.0.0.1:3000/user/editUser -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "current_password":"Test1234"}}'
+  #######################################################
   def editUser
 
-    ##
-    ## TODO: Currently the password can be updated without specifying the old
-    ## password and verifying that the old password 'checks out'
-    ##
-
     user = getUserByAuthToken(request)
-    update_resource(user, account_update_params)
+
+    userUpdateFields = account_update_params
+    newPassword = userUpdateFields[:password]
+    currentPassword = userUpdateFields[:current_password]
+
+    if(!newPassword.blank?)
+      passwordCheck = false
+      if(!currentPassword.blank?)
+        passwordCheck = user.valid_password?(currentPassword)
+      end
+      if(!passwordCheck)
+        logger.info "The current password specified was not valid, giving 422 response"
+        render :status => :unprocessable_entity, :json => I18n.t("422response_current_password_confirmation_failure")
+        return
+      end
+    end
+
+    update_resource(user, userUpdateFields)
     user.save
     render :status => 200, :json => user
   end

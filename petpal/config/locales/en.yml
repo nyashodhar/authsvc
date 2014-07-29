@@ -23,3 +23,4 @@ en:
   hello: "Hello world"
   403response: "Not logged in"
   401response: "Not authorized"
+  422response_current_password_confirmation_failure: "Current password confirmation failed"
