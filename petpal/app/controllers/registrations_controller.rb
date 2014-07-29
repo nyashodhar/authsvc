@@ -68,20 +68,15 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   # Create user
   # POST /user/register
-  # curl -v -X POST http://127.0.0.1:3000/user/register.json -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+  # curl -v -X POST http://127.0.0.1:3000/user/register -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def create
-	  respond_to do |format|
-	    format.json {
-        	build_resource(sign_up_params)
-
-	        if resource.save
-	          render :status => 200, :json => resource
-	      	else
-	        	render :json => resource.errors, :status => :unprocessable_entity
-		    end
-	    }
-	  end
+   	build_resource(sign_up_params)
+    if resource.save
+      render :status => 200, :json => resource
+	 	else
+	   	render :json => resource.errors, :status => :unprocessable_entity
+		end
   end
 
   ##################
