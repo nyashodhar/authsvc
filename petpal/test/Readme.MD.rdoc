@@ -1,0 +1,32 @@
+Writing a test
+- Functional tests 
+- Should be written in the /controllers folder and its filename has to follow the naming convention controller_name_test.rb
+- Each test can have a name and everything in the test is after the 'do'
+- You make a call to the 'action' you want to test with the 'httpMethod'
+- Once you make the call, you can assert the http Status with 
+			assert_response :response_code_name
+- Get the json response using
+			response.body
+- You can assert the response using usual assert, please refer to http://guides.rubyonrails.org/testing.html
+
+Test Data
+- The test data resides in /fixtures folder
+- For example users.yml creates a users table in the test db
+- The test data goes into this yml file
+- There are multiple ways of defining this data, it can be done as static data or as dynamic data using erb script
+- This data will be loaded to database when the test starts
+- You can always reset the test db by  giving this command
+				'rake db:test:prepare'
+
+Debugging
+- For debugging we use 'byebug' gem
+- To debug, just drop 
+			byebug
+	in the code where you want to start debugging
+- To go to next step, just type 'next' once the byebug is hit while running the test
+- To step into a step, just type 'step'
+- To see the values of parameters in the scope of byebug, just type 
+				p <parametername>
+- The cool thing is, you can type the whole Ruby commands with the p command (similar to rails console) and you can evaluate the results with the parameters in that instance
+- To continue, just type 'continue'
+- To exit, just type 'exit' or 'kill'
