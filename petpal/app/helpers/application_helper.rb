@@ -69,6 +69,13 @@ module ApplicationHelper
 
     myTestUserSignParams = User.new(sign_in_params)
     email = myTestUserSignParams.email
+
+    if(email.blank?)
+      logger.info "clearStaleTokenBeforeSignIn(): No email specified for sign-in, can't check token staleness.\n"
+      render :status => :unprocessable_entity, :json => I18n.t("422response_no_email_specified")
+      return
+    end
+
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("email=?", email).limit(1)
     theUser = userInfo[0]
 
@@ -77,8 +84,8 @@ module ApplicationHelper
       # We couldn't find a user with the given email => Do 401 here.
       # If we don't take action here, devise will actually do a successful sign-in
       #
-      logger.info "clearStaleTokenBeforeSignIn(): User could not be found, can't check authentication token staleness and sign-in will fail in controller.\n"
-      render :status => 401, :json => I18n.t("401response")
+      logger.info "clearStaleTokenBeforeSignIn(): User could not be found for email #{email}.\n"
+      render :status => 401, :json => I18n.t("401response_invalid_email_or_password")
       return
     end
 

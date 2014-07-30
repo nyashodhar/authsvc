@@ -52,16 +52,40 @@ class SessionsController < Devise::SessionsController
   ################
   def create
 
-    #
-    # THIS IS A HACK, FIX BY IMPLEMENTING
-    #
+    signInParams = sign_in_params
+    password = signInParams[:password]
 
-    if(request.headers[:HTTP_ACCEPT] != "application/json")
-      logger.info "Invalid Accept header value #{request.headers[:HTTP_ACCEPT]}, request can't be processed.\n"
-      render :status => :unprocessable_entity, :json => I18n.t("422response_invalid_accept_header")
+    if(password.blank?)
+      logger.info "No password specified, can't process login.\n"
+      render :status => :unprocessable_entity, :json => I18n.t("422response_no_password_specified")
       return
     end
-    super
+
+    # Note: The filter has already verified the presence in the params at this point, so
+    # no need to worry about email being blank here..
+    email = signInParams[:email]
+
+    user = User.find_by_email(email)
+    if(user.blank?)
+      logger.info "No user found for email #{email}\n"
+      render :status => 401, :json => I18n.t("401response_invalid_email_or_password")
+      return
+    end
+
+    passwordCheck = user.valid_password?(password)
+    if(!passwordCheck)
+      logger.info "Invalid password for user #{email}\n"
+      render :status => 401, :json => I18n.t("401response_invalid_email_or_password")
+      return
+    end
+
+    # Correct email/password has been supplied, update sign-in record
+    sign_in(resource_name, user)
+
+    # Give response
+    signInResponse = { :id => user.id, :email => email, :authentication_token => user.authentication_token}
+    render :status => 200, :json => signInResponse
+    return
   end
 
   ################
