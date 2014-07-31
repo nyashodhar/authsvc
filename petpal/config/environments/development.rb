@@ -1,10 +1,7 @@
 Rails.application.configure do
 
-  # PER: Do our own routes for errors
-  config.exceptions_app = self.routes
-
   # Setting for auth token expiration - dev TTL=10s
-  config.auth_token_ttl_ms = 6000000
+  config.auth_token_ttl_ms = 10000
 
   # Settings specified here will take precedence over those in config/application.rb.
 
