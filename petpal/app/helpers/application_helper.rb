@@ -24,7 +24,6 @@ module ApplicationHelper
       render :status => 401, :json => I18n.t("401response")
       return
     end
-
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
     if(theUser.blank?)
@@ -64,7 +63,6 @@ module ApplicationHelper
     # Technical Note: It's assumed that this module is included from the controller, and hence the request
     # object is available at this point.
     #
-
     myTestUserSignParams = User.new(sign_in_params)
     email = myTestUserSignParams.email
 
