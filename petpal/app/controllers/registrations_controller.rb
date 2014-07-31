@@ -68,7 +68,7 @@ class RegistrationsController < Devise::RegistrationsController
     update_resource(user, userUpdateFields)
 
     if !user.save
-      render :status => 200, :json => I18n.t("422response_unable_to_update_user")
+      render :status => 422, :json => I18n.t("422response_unable_to_update_user")
       return
     end
 
