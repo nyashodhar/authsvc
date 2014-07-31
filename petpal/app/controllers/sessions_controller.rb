@@ -90,8 +90,9 @@ class SessionsController < Devise::SessionsController
 
   ################
   # Sign out:
-  # DELETE /user/logout
-  # curl -X DELETE http://127.0.0.1:3000/user/logout -H "X-User-Email: test@example.com" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json"
+  #
+  # DELETE /user/auth
+  # curl -v -X DELETE http://127.0.0.1:3000/user/auth -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json"
   ################
   def logout
     user = getUserByAuthToken(request)

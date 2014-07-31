@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     #RegistrationsController:
     #===============================
     get 'user', to: 'registrations#find', as: 'find'
-    put 'user', to: 'registrations#edit', as: 'edit'
+    put 'user', to: 'registrations#editUser', as: 'editUser'
     post 'user', to: 'registrations#create', as: 'create'
     delete 'user', to: 'registrations#delete', as: 'delete'
 
@@ -18,8 +18,8 @@ Rails.application.routes.draw do
     delete 'user/auth', to: 'sessions#logout', as: 'logout'
   end
 
-  devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions" }
-  get 'pages/home'
+  #devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions" }
+  devise_for :users
 
   ##devise_for :users, :controllers => {:registrations => "registrations"}
 
