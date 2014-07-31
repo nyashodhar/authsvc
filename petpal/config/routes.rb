@@ -3,15 +3,23 @@ Rails.application.routes.draw do
   get 'profiles/secureLookup', to:'profiles#secureLookup', as: 'secureLookup'
 
   devise_scope :user do
-    get 'user/token/verify', to: 'sessions#verify', as: 'verify'
-    get 'user/lookup', to: 'registrations#lookup', as: 'lookup'
-    put 'user/editUser', to: 'registrations#editUser', as: 'editUser'
-    delete 'user/deleteUser', to: 'registrations#deleteUser', as: 'deleteUser'
+
+    #RegistrationsController:
+    #===============================
+    get 'user', to: 'registrations#find', as: 'find'
+    put 'user', to: 'registrations#edit', as: 'edit'
+    post 'user', to: 'registrations#create', as: 'create'
+    delete 'user', to: 'registrations#delete', as: 'delete'
+
+    #SessionsController:
+    #===============================
+    get 'user/auth', to: 'sessions#verify', as: 'verify'
+    post 'user/auth', to: 'sessions#login', as: 'login'
+    delete 'user/auth', to: 'sessions#logout', as: 'logout'
   end
 
-  devise_for :users, path: "user", path_names: { sign_in: 'login', sign_out: 'logout', password: 'secret', confirmation: 'verification', unlock: 'unblock', registration: 'register', sign_up: 'cmon_let_me_in' }, :controllers => {:registrations => "registrations", :sessions => "sessions" }
+  devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions" }
   get 'pages/home'
-
 
   ##devise_for :users, :controllers => {:registrations => "registrations"}
 

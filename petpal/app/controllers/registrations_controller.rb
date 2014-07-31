@@ -23,7 +23,7 @@ class RegistrationsController < Devise::RegistrationsController
   include ApplicationHelper
 
   # Required to for devise to not require the presence of an authenticity token
-  skip_before_action :verify_authenticity_token, :only => [:create, :update, :editUser, :deleteUser]
+  skip_before_action :verify_authenticity_token, :only => [:create, :edit, :delete]
 
   respond_to :json
 
@@ -31,17 +31,16 @@ class RegistrationsController < Devise::RegistrationsController
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
   # is not expired
   #
-  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:lookup, :editUser, :deleteUser]
+  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:find, :edit, :delete]
 
   #################
   # Look up user
-  # GET /user/lookup
-  # If the user already was deleted, the user will get a 403 error passed along from
-  # the verifyToken method
-  # curl -v -X GET http://127.0.0.1:3000/user/lookup -H "X-User-Token: zZGGxQYUcVxHDXfxVysS"
+  # GET /user
+  # If the user already was deleted, the user will get a 401
+  # curl -v -X GET http://127.0.0.1:3000/user -H "X-User-Token: zZGGxQYUcVxHDXfxVysS"
   #################
-  def lookup
-    user = getLoggedInUser(request)
+  def find
+    user = getUserByAuthToken(request)
     theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
     render :status => 200, :json => theResponse
   end
@@ -57,7 +56,7 @@ class RegistrationsController < Devise::RegistrationsController
   # EXAMPLE:
   # curl -v -X PUT http://127.0.0.1:3000/user/editUser -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "current_password":"Test1234"}}'
   #######################################################
-  def editUser
+  def edit
 
     user = getUserByAuthToken(request)
 
@@ -103,9 +102,9 @@ class RegistrationsController < Devise::RegistrationsController
   # DELETE /user/deleteUser
   # This will put 'now' as 'deleted_at' in the user object and set 'invactive' to true.
   # If the user already was deleted, the client will get a 403 in the authentication filter
-  # curl -v -X DELETE http://127.0.0.1:3000/user/deleteUser -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  # curl -v -X DELETE http://127.0.0.1:3000/user/auth -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
-  def deleteUser
+  def delete
     user = getUserByAuthToken(request)
     user.soft_delete
     head :no_content

@@ -15,9 +15,9 @@ class SessionsController < Devise::SessionsController
   include ApplicationHelper
 
   # Required to for devise to not require the presence of an authenticity token
-  skip_before_action :verify_authenticity_token, :only => [:create, :destroy]
+  skip_before_action :verify_authenticity_token, :only => [:login, :logout]
 
-  prepend_before_filter :require_no_authentication, :only => [:create]
+  prepend_before_filter :require_no_authentication, :only => [:login]
   include Devise::Controllers::Helpers
 
   respond_to :json
@@ -26,12 +26,12 @@ class SessionsController < Devise::SessionsController
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
   # is not expired
   #
-  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:verify, :destroy]
+  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:verify, :logout]
 
   ################
   # Verify token
   # GET /user/token/verify
-  # curl -X GET http://127.0.0.1:3000/user/token/verify -H "X-User-Token: GcZy__QhxcxFvdqgpTtz"
+  # curl -v -X GET http://127.0.0.1:3000/user/auth -H "X-User-Token: GcZy__QhxcxFvdqgpTtz"
   ################
   def verify
     user = getUserByAuthToken(request)
@@ -48,10 +48,10 @@ class SessionsController < Devise::SessionsController
 
   ################
   # Sign in:
-  # POST /user/login
-  # curl -X POST http://127.0.0.1:3000/user/login -H "Content-Type: application/json" -H "Accept: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234"}}'
+  # POST /user/auth
+  # curl -X POST http://127.0.0.1:3000/user/auth -H "Content-Type: application/json" -H "Accept: application/json" -d '{"user":{"email":"test4@example.com", "password":"Test1234"}}'
   ################
-  def create
+  def login
 
     signInParams = sign_in_params
     password = signInParams[:password]
@@ -93,7 +93,7 @@ class SessionsController < Devise::SessionsController
   # DELETE /user/logout
   # curl -X DELETE http://127.0.0.1:3000/user/logout -H "X-User-Email: test@example.com" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json"
   ################
-  def destroy
+  def logout
     user = getUserByAuthToken(request)
     clearAuthTokenForUser(user)
     head :no_content
