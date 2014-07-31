@@ -41,8 +41,9 @@ class RegistrationsController < Devise::RegistrationsController
   # curl -v -X GET http://127.0.0.1:3000/user/lookup -H "X-User-Token: zZGGxQYUcVxHDXfxVysS"
   #################
   def lookup
-    userInfo = getLoggedInUser(request)
-    render :status => 200, :json => userInfo
+    user = getLoggedInUser(request)
+    theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+    render :status => 200, :json => theResponse
   end
 
   #######################################################
@@ -78,7 +79,8 @@ class RegistrationsController < Devise::RegistrationsController
 
     update_resource(user, userUpdateFields)
     user.save
-    render :status => 200, :json => user
+    theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+    render :status => 200, :json => theResponse
   end
 
   ##################
@@ -89,7 +91,8 @@ class RegistrationsController < Devise::RegistrationsController
   def create
    	build_resource(sign_up_params)
     if resource.save
-      render :status => 200, :json => resource
+      theResponse = { :id => resource.id, :email => resource.email, :authentication_token => user.authentication_token}
+      render :status => 200, :json => theResponse
 	 	else
 	   	render :json => resource.errors, :status => :unprocessable_entity
 		end
@@ -105,7 +108,7 @@ class RegistrationsController < Devise::RegistrationsController
   def deleteUser
     user = getUserByAuthToken(request)
     user.soft_delete
-    render :status => 204, :json => ""
+    head :no_content
   end
 
 end

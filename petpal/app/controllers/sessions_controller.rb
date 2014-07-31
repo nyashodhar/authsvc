@@ -35,7 +35,8 @@ class SessionsController < Devise::SessionsController
   ################
   def verify
     user = getUserByAuthToken(request)
-    render :status => 200, :json => user
+    theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+    render :status => 200, :json => theResponse
   end
 
   #
@@ -82,9 +83,8 @@ class SessionsController < Devise::SessionsController
     # Correct email/password has been supplied, update sign-in record
     sign_in(resource_name, user)
 
-    # Give response
-    signInResponse = { :id => user.id, :email => email, :authentication_token => user.authentication_token}
-    render :status => 200, :json => signInResponse
+    theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+    render :status => 200, :json => theResponse
     return
   end
 
