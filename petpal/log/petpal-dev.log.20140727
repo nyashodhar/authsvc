@@ -1,7 +1,0 @@
-# Logfile created on 2014-07-27 22:35:23 -0700 by logger.rb/44203
-[m2014-07-27 22:38:25.483[0m [[mINFO[0m] Started POST "/user/login.json" for 127.0.0.1 at 2014-07-27 22:38:25 -0700 (pid:18273)
-[m2014-07-27 22:38:25.530[0m [[mINFO[0m] Processing by SessionsController#create as JSON (pid:18273)
-[m2014-07-27 22:38:25.534[0m [[mINFO[0m] Parameters: {"user"=>{"email"=>"test5@example.com", "password"=>"[FILTERED]"}, "session"=>{"user"=>{"email"=>"test5@example.com", "password"=>"[FILTERED]"}}} (pid:18273)
-[m2014-07-27 22:38:25.680[0m [[mINFO[0m] clearStaleTokenBeforeSignIn(): User could not be found, can't check authentication token staleness and sign-in will fail in controller. (pid:18273)
-[m2014-07-27 22:38:25.690[0m [[mINFO[0m] Filter chain halted as :clearStaleTokenBeforeSignIn rendered or redirected (pid:18273)
-[m2014-07-27 22:38:25.690[0m [[mINFO[0m] Completed 401 Unauthorized in 156ms (Views: 0.2ms | ActiveRecord: 0.8ms) (pid:18273)
