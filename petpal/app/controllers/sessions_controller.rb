@@ -44,7 +44,7 @@ class SessionsController < Devise::SessionsController
   # If it's expired, we need to make sure it's reset. Otherwise the user will
   # be allowed to continue to use the auth token even after it has expired!
   #
-  before_action :clearStaleTokenBeforeSignIn, :only => [:create]
+  before_action :clearStaleTokenBeforeSignIn, :only => [:login]
 
   ################
   # Sign in:
