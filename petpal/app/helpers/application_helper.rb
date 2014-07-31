@@ -6,11 +6,11 @@ module ApplicationHelper
   # This method verifies that the user is logged in and that the auth token
   # is not expired.
   #
-  # If the user is not logged in, this method will give a 403 response
+  # If the user is not logged in, this method will give a 401 response
   # and control will not reach the protected controller action.
   #
   # If the user is logged in, but the auth token is expired, this method
-  # will give a 403 response and control will not reach the protected
+  # will give a 401 response and control will not reach the protected
   # controller action.
   #
   # If the user is logged in and the auth token is not expired, this
@@ -20,7 +20,7 @@ module ApplicationHelper
 
     token = request.headers['X-User-Token']
     if(token.blank?)
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request, responding with 401\n"
+      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request\n"
       render :status => 401, :json => I18n.t("401response")
       return
     end
@@ -28,9 +28,8 @@ module ApplicationHelper
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
     if(theUser.blank?)
-      # Nobody is logged in for this auth token => 403
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}, responding with 403\n"
-      render :status => 403, :json => I18n.t("403response")
+      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}\n"
+      render :status => 401, :json => I18n.t("401response")
       return
     end
 
@@ -40,9 +39,8 @@ module ApplicationHelper
     #
 
     if(isLoginExpired(theUser))
-      # The sign-in is expired => 403
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired, responding with 403\n"
-      render :status => 403, :json => I18n.t("403response")
+      logger.info "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired\n"
+      render :status => 401, :json => I18n.t("401response")
       return
     end
 
