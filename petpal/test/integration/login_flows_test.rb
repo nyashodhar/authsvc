@@ -1,7 +1,25 @@
 require 'test_helper'
 
 class LoginFlowsTest < ActionDispatch::IntegrationTest
-  
+
+  #
+  # Test that requests with invalid json are handled properly
+  # Send a request with invalid JSON, you should get a 400 JSON response
+  #
+  test "Verify invalid JSON handling" do
+    # login via http
+    invalid_json = '{"user"=#rty$$["email":"user1@petpal.com", "password":"Test1234"}}'
+    #login_request_headers = '{"Content-Type" : "application/json"}'
+    headers = { 'CONTENT_TYPE' => 'application/json' }
+    post "user/auth", invalid_json, headers
+    assert_response :bad_request
+
+    the_response = JSON.parse(response.body)
+    assert_not_nil(the_response["error"])
+    assert(the_response["error"].eql?("There was a problem in your JSON"))
+  end
+
+
   #
   # Test to login user
   # and then verify the user auth token
