@@ -20,14 +20,14 @@ module ApplicationHelper
 
     token = request.headers['X-User-Token']
     if(token.blank?)
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request\n"
+      logger.error "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request\n"
       render :status => 401, :json => I18n.t("401response")
       return
     end
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
     if(theUser.blank?)
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}\n"
+      logger.error "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}\n"
       render :status => 401, :json => I18n.t("401response")
       return
     end
@@ -67,7 +67,7 @@ module ApplicationHelper
     email = myTestUserSignParams.email
 
     if(email.blank?)
-      logger.info "clearStaleTokenBeforeSignIn(): No email specified for sign-in, can't check token staleness.\n"
+      logger.error "clearStaleTokenBeforeSignIn(): No email specified for sign-in, can't check token staleness.\n"
       render :status => :unprocessable_entity, :json => I18n.t("422response_no_email_specified")
       return
     end

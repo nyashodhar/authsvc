@@ -57,7 +57,7 @@ class SessionsController < Devise::SessionsController
     password = signInParams[:password]
 
     if(password.blank?)
-      logger.info "No password specified, can't process login.\n"
+      logger.error "No password specified, can't process login.\n"
       render :status => :unprocessable_entity, :json => I18n.t("422response_no_password_specified")
       return
     end

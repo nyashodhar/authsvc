@@ -59,7 +59,7 @@ class RegistrationsController < Devise::RegistrationsController
         passwordCheck = user.valid_password?(currentPassword)
       end
       if(!passwordCheck)
-        logger.info "The current password specified was not valid, giving 422 response"
+        logger.error "The current password specified was not valid, giving 422 response"
         render :status => :unprocessable_entity, :json => I18n.t("422response_current_password_confirmation_failure")
         return
       end
