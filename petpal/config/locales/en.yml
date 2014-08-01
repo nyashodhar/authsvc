@@ -29,3 +29,4 @@ en:
   422response_no_password_specified: "No password specified."
   422response_no_email_specified: "No email specified."
   422response_unable_to_update_user: "User could not be updated."
+  500response_internal_server_error: "Internal Server Error"
