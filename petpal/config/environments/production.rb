@@ -32,6 +32,10 @@ Rails.application.configure do
   # Generate digests for assets URLs.
   config.assets.digest = true
 
+  # TODO: For Production
+  # Devise config
+  # config.action_mailer.default_url_options = { host: 'localhost:3000' }
+
   # `config.assets.precompile` has moved to config/initializers/assets.rb
 
   # Specifies the header that your server uses for sending files.
@@ -70,6 +74,9 @@ Rails.application.configure do
 
   # Send deprecation notices to registered listeners.
   config.active_support.deprecation = :notify
+
+  #Logger Config
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-prod.log'))
 
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false

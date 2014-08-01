@@ -1,4 +1,8 @@
 Rails.application.configure do
+
+  # Setting for auth token expiration - dev TTL=10s
+  config.auth_token_ttl_ms = 10000
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # In the development environment your application's code is reloaded on
@@ -31,6 +35,13 @@ Rails.application.configure do
   # Checks for improperly declared sprockets dependencies.
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
+
+  #Logger Config
+  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-dev.log', 'daily'))
+  config.log_level = :info
+
+  #Devise config
+  config.action_mailer.default_url_options = { host: 'localhost:3000' }
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true

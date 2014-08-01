@@ -1,0 +1,26 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# This model initially had no columns defined.  If you add columns to the
+# model remove the '{}' from the fixture names and add the columns immediately
+# below each fixture, per the syntax in the comments below
+#
+<% 10.times do |n| %>
+user_<%= n %>:
+  id: <%= n %>
+  email: <%= "user#{n}@petpal.com" %>
+  encrypted_password: <%= "$2a$10$KveIRN9meMEfEyA7Dm.M5.jmkDeaHvww4dlq1Bkhb9w0e90nEf57S" %>
+  reset_password_token: nil
+  reset_password_token: <%= n %>
+  reset_password_sent_at: nil
+  remember_created_at: nil
+  sign_in_count: 0
+  current_sign_in_at: nil
+  last_sign_in_at: nil
+  current_sign_in_ip: nil
+  last_sign_in_ip: nil
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+  authentication_token: <%= "authToken#{n}" %>
+  deleted_at: nil
+  inactive: NULL
+<% end %>

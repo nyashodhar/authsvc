@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  401response: "Not authorized."
+  401response_invalid_email_or_password: "Invalid email or password."
+  422response_current_password_confirmation_failure: "Current password confirmation failed."
+  422response_no_password_specified: "No password specified."
+  422response_no_email_specified: "No email specified."
+  422response_unable_to_update_user: "User could not be updated."
