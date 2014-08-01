@@ -8,6 +8,10 @@ Bundler.require(*Rails.groups)
 
 module Petpal
   class Application < Rails::Application
+
+    # Ensure JSON parsing errors get nice JSON responses!
+    config.middleware.insert_before ActionDispatch::ParamsParser, "CatchJsonParseErrors"
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
