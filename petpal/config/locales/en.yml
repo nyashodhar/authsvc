@@ -24,6 +24,7 @@ en:
   400response_middleware_invalid_json: "There was a problem in your JSON"
   401response: "Not authorized."
   401response_invalid_email_or_password: "Invalid email or password."
+  404response_resource_not_found: "Resource not found"
   422response_current_password_confirmation_failure: "Current password confirmation failed."
   422response_no_password_specified: "No password specified."
   422response_no_email_specified: "No email specified."

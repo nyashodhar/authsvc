@@ -3,13 +3,26 @@ require 'test_helper'
 class LoginFlowsTest < ActionDispatch::IntegrationTest
 
   #
+  # Test that requests for which the URL path could not be mapped to any
+  # controller get a proper 404 formatted response
+  #
+  test "Verify invalid 404 for URL with no mapping" do
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "user/authfoobar", nil, my_request_headers
+    assert_response :not_found
+
+    my_response = JSON.parse(response.body)
+    assert_not_nil(my_response["error"])
+    assert(my_response["error"].eql?("Resource not found"))
+  end
+
+  #
   # Test that requests with invalid json are handled properly
   # Send a request with invalid JSON, you should get a 400 JSON response
   #
   test "Verify invalid JSON handling" do
-    # login via http
     invalid_json = '{"user"=#rty$$["email":"user1@petpal.com", "password":"Test1234"}}'
-    #login_request_headers = '{"Content-Type" : "application/json"}'
     headers = { 'CONTENT_TYPE' => 'application/json' }
     post "user/auth", invalid_json, headers
     assert_response :bad_request

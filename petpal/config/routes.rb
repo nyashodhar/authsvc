@@ -21,6 +21,8 @@ Rails.application.routes.draw do
   #devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions" }
   devise_for :users
 
+  match "*path", to: "errors#not_found", via: :all
+
   ##devise_for :users, :controllers => {:registrations => "registrations"}
 
   # The priority is based upon order of creation: first created -> highest priority.
