@@ -49,7 +49,7 @@ class SessionsController < Devise::SessionsController
   ################
   # Sign in:
   # POST /user/auth
-  # curl -X POST http://127.0.0.1:3000/user/auth -H "Content-Type: application/json" -H "Accept: application/json" -d '{"user":{"email":"test4@example.com", "password":"Test1234"}}'
+  # curl -v -X POST http://127.0.0.1:3000/user/auth -H "Content-Type: application/json" -H "Accept: application/json" -d '{"user":{"email":"test4@example.com", "password":"Test1234"}}'
   ################
   def login
 
@@ -81,6 +81,7 @@ class SessionsController < Devise::SessionsController
     end
 
     # Correct email/password has been supplied, update sign-in record
+
     sign_in(resource_name, user)
 
     theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}

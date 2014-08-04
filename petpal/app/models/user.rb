@@ -16,18 +16,11 @@ class User < ActiveRecord::Base
   # This is for simple_token_authentication:
   acts_as_token_authenticatable
 
-
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable and :omniauthable
-  devise :database_authenticatable, :registerable,
+  # :lockable and :omniauthable
+  devise :database_authenticatable, :confirmable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :timeoutable, :timeout_in => 15.seconds
   #attr_accessible :email, :password, :password_confirmation
-
-  # TODO: Add an attribute to be used for authorization purposes
-
-  # TODO: Add an attribute to be used for authentication_token expiration purposes (if we need it)
-
-  # TODO: Add first name, last name, profile image URL
 
 end

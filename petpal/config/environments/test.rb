@@ -1,7 +1,15 @@
 Rails.application.configure do
+
+  #####################################################################################
   # Settings specified here will take precedence over those in config/application.rb.
+  #####################################################################################
+
   # Setting for auth token expiration - dev TTL=10s
   config.auth_token_ttl_ms = 3000
+
+  config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {:address => "127.0.0.1", :port => 11025}
 
   # The test environment is used exclusively to run your application's
   # test suite. You never need to work with it otherwise. Remember that

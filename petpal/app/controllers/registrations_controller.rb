@@ -12,13 +12,13 @@ class RegistrationsController < Devise::RegistrationsController
   include ApplicationHelper
 
   # Required to for devise to not require the presence of an authenticity token
-  skip_before_action :verify_authenticity_token, :only => [:create, :editUser, :delete]
+  skip_before_action :verify_authenticity_token, :only => [:create, :editUser, :delete, :triggerConfirmation]
 
   #
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
   # is not expired
   #
-  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:find, :editUser, :delete]
+  before_action :ensureLoggedInAndAuthTokenNotExpired, :only => [:find, :editUser, :delete, :triggerConfirmation]
 
   respond_to :json
 
@@ -79,7 +79,7 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   # Create user
   # POST /user
-  # curl -v -X POST http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+  # curl -v -X PUT http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def create
    	build_resource(sign_up_params)
@@ -96,12 +96,38 @@ class RegistrationsController < Devise::RegistrationsController
   # DELETE /user/deleteUser
   # This will put 'now' as 'deleted_at' in the user object and set 'invactive' to true.
   # If the user already was deleted, the client will get a 403 in the authentication filter
-  # curl -v -X DELETE http://127.0.0.1:3000/user/auth -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  # curl -v -X DELETE http://127.0.0.1:3000/user -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
   def delete
     user = getUserByAuthToken(request)
     user.soft_delete
     head :no_content
+  end
+
+
+  ##################
+  # Trigger the sending of a confirmation email for the user
+  # POST /user/confirmation
+  # 412 - If the email address of the user if already confirmed
+  # curl -v -X PUT http://127.0.0.1:3000/user/confirmation -H "Content-Length: 0" -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  ##################
+  def triggerConfirmation
+
+    user = getUserByAuthToken(request)
+    user.resend_confirmation_instructions
+
+    if(user.errors.blank?)
+      logger.info "Email confirmation instructions were sent for user #{user.email}\n"
+      render :status => 200, :json => "Email confirmation instructions emailed."
+    else
+      if(!user.errors.messages[:email].blank?)
+        logger.error "Devise said: \"#{user.errors.messages[:email]}\". Interpret as no email confirmation pending for #{user.email} (user id: #{user.id}), instructions will not be emailed.\n"
+        render :status => 412, :json => {:error => "No email confirmation pending"}.to_json
+      else
+        logger.error "Unexpected error encountered when attempting to send confirmation instructions for #{user.email}. Error: #{user.errors.inspect}.\n"
+        render :status => 500, :json => {:error => I18n.t("500response_internal_server_error")}.to_json
+      end
+    end
   end
 
 end

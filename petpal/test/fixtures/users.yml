@@ -23,4 +23,8 @@ user_<%= n %>:
   authentication_token: <%= "authToken#{n}" %>
   deleted_at: nil
   inactive: NULL
+  confirmation_token: <%= "confirmationtoken#{n}" %>
+  confirmed_at: nil
+  confirmation_sent_at: <%= Time.now %>
+  unconfirmed_email: nil
 <% end %>
