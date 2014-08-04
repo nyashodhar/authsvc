@@ -353,7 +353,10 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
 
   #
   # Test creating a user whose email is not already taken
-  # - You should be successful
+  # - The creation should be successful and a confirmation token should be present.
+  # - After user creation login should be successful even though user is not confirmed yet
+  # - After confirmation the 'confirmed_at' time should be written
+  # - It should not be possible to use the confirmation token more than one time
   #
 	test "create user success" do
 	    
@@ -366,7 +369,52 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
 	  assert_not_nil(JSON.parse(response.body)["authentication_token"])
 	  assert_not_nil(JSON.parse(response.body)["email"])
 	  assert_not_nil(JSON.parse(response.body)["id"])
-	end
+    assert_not_nil(JSON.parse(response.body)["confirmation_token"])
+
+    confirmation_token = JSON.parse(response.body)["confirmation_token"]
+    user_id = JSON.parse(response.body)["id"]
+
+    user = User.find_by_id(user_id)
+    assert(user.email.eql?('testuser1@petpal.com'))
+    assert(user.confirmed_at.blank?)
+    assert(!user.confirmation_token.blank?)
+
+    # Do a login, it should be successful even though email is not confirmed yet
+
+    login_request = '{"user":{"email":"testuser1@petpal.com", "password":"Test1234"}}'
+    login_headers = { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
+    post "user/auth", login_request, login_headers
+    assert_response :success
+
+    #
+    # Visit the email confirmation link
+    # - confirmed_at should be set
+    # - confirmation_token will be cleared
+    #
+    my_request_headers = {'Content-Type' => 'text/html'}
+    my_url_params = {"confirmation_token" => confirmation_token}
+    get "users/confirmation", my_url_params, my_request_headers
+    assert_response :found
+
+    user = User.find_by_id(user_id)
+    assert(user.email.eql?('testuser1@petpal.com'))
+    assert(!user.confirmed_at.blank?)
+    assert(user.confirmation_token.blank?)
+
+    #
+    # Visit the confirmation link a 2nd time, we should no longer get the 302
+    # response that indicates success, but rather get some 200 response
+    #
+    get "users/confirmation", my_url_params, my_request_headers
+    assert_response :success
+
+    # Check that user is still as expected after bogus 2nd confirmation attempt
+
+    user = User.find_by_id(user_id)
+    assert(user.email.eql?('testuser1@petpal.com'))
+    assert(!user.confirmed_at.blank?)
+    assert(user.confirmation_token.blank?)
+  end
 
   #
   # Test that deleted users can't login
