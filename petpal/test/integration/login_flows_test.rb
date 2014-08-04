@@ -3,19 +3,15 @@ require 'test_helper'
 class LoginFlowsTest < ActionDispatch::IntegrationTest
 
   #
-  # TODO: THIS TEST IS BROKEN NOW!!!!
-  # IT'S BROKEN DUE TO EMAIL VERIFICATION
-  # AFTER EMAIL IS CHANGED, AN EMAIL VERIFICATION STEP IS NEEDED
-  # FIGURE OUT HOW THAT WORKS
-  #
   # Test that the email address can be changed
   # - Do login
   # - Do user edit and update email address to an address not in in use by other user => should be successful
   # - Do logout
-  # - Do login using the old email address => You should get a 401
+  # - Do login using the old email address => You should get a 200 because the new email is not confirmed yet
+  # - Visit the email change confirmation link
+  # - Do login using the old email address => You should get a 401 now because email has been changed
   # - Do login using the new email address => You should be successful
   #
-=begin
   test "edit email and verify the edit" do
 
     login_request = '{"user":{"email":"user1@petpal.com", "password":"Test1234"}}'
@@ -36,25 +32,52 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     edit_request_headers = {'Content-Type' => 'application/json', 'ACCEPT' => 'application/json', 'X-User-Token' => auth_token}
     put "user", edit_request_data, edit_request_headers
 
+    #STDOUT.write "\nEDIT USER RESPONSE: #{response.inspect}\n"
+
     assert_response :success
     assert_not_nil(JSON.parse(response.body)["authentication_token"])
     assert_not_nil(JSON.parse(response.body)["email"])
     assert_not_nil(JSON.parse(response.body)["id"])
+    assert_not_nil(JSON.parse(response.body)["confirmation_token"])
+
+    confirmation_token = JSON.parse(response.body)["confirmation_token"]
+
+    # After email update..
+
+    user = User.find_by_id(1)
+    assert(user.unconfirmed_email.eql?('testpetpaluser1@petpal.com'))
 
     # logout user
-    new_auth_token = JSON.parse(response.body)["authentication_token"]
-    logout_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => new_auth_token}
-    delete "user/auth", nil, logout_request_headers
+    #new_auth_token = JSON.parse(response.body)["authentication_token"]
+    #logout_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => new_auth_token}
+    #delete "user/auth", nil, logout_request_headers
+    #assert_response :success
+    #assert(response.body.blank?)
+
+    #sleep(1)
+
+    # login with old email - should still get 200 since email confirmation not complete
+    post "user/auth", login_request, login_headers
     assert_response :success
-    assert(response.body.blank?)
 
-    sleep(1)
+    #
+    # Visit the email confirmation link - this will update the email address in the user
+    # and clear the unconfirmed_email field as well...
+    #
+    my_request_headers = {'Content-Type' => 'text/html'}
+    my_url_params = {"confirmation_token" => confirmation_token}
+    get "users/confirmation", my_url_params, my_request_headers
+    assert_response :found
+    #assert_response :success
 
-    # login with old email
+    user = User.find_by_id(1)
+    assert(user.unconfirmed_email.blank?)
+
+    # login with old email - should now get a 401 since the email confirmation is now complete
     post "user/auth", login_request, login_headers
     assert_response :unauthorized
 
-    # login with new email
+    # login with new email - should succueed now that email confirmation is completed
     new_login_request = '{"user":{"email":"testpetpaluser1@petpal.com", "password":"Test1234"}}'
     new_login_headers = { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
     post "user/auth", new_login_request, new_login_headers
@@ -62,9 +85,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert_not_nil(JSON.parse(response.body)["authentication_token"])
     assert_not_nil(JSON.parse(response.body)["email"])
     assert_not_nil(JSON.parse(response.body)["id"])
-
   end
-=end
 
   #
   # Test that requests for which the URL path could not be mapped to any

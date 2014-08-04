@@ -43,7 +43,7 @@ class RegistrationsController < Devise::RegistrationsController
   # correctly
   #
   # EXAMPLE:
-  # curl -v -X PUT http://127.0.0.1:3000/user -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS" -H "Content-Type: application/json" -d '{"user":{"email":"test4@example.com", "password":"Test1234", "current_password":"Test1234"}}'
+  # curl -v -X PUT http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test4@example.com", "password":"Test1234", "current_password":"Test1234"}}' -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   #######################################################
   def editUser
 
@@ -72,14 +72,31 @@ class RegistrationsController < Devise::RegistrationsController
       return
     end
 
-    theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+    #
+    # If the email was changed and an email with confirmation instruction was sent,
+    # then this is our one and only time to capture the one time generated clear-text
+    # token. We will capture it here and include it in the JSON response. This makes
+    # it possible to create integration tests for the email confirmation step!
+    #
+
+    theResponse = nil
+
+    if(!userUpdateFields[:email].blank? && !user.email.downcase.eql?(userUpdateFields[:email].downcase))
+      logger.info "The request changes the email from #{user.email} to #{userUpdateFields[:email].downcase}. Email confirmation instructions will be sent and confirmation token will be included in the JSON response.\n"
+      raw_token = user.instance_variable_get("@raw_confirmation_token")
+      theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token, :confirmation_token => raw_token}
+    else
+      theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+    end
+
     render :status => 200, :json => theResponse
+
   end
 
   ##################
   # Create user
   # POST /user
-  # curl -v -X PUT http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+  # curl -v -X POST http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def create
    	build_resource(sign_up_params)
