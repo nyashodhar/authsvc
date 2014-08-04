@@ -42,6 +42,9 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
 
     user = User.find_by_id(1)
     assert(user.unconfirmed_email.eql?('testpetpaluser1@petpal.com'))
+    assert(user.confirmed_at.blank?)
+    assert(!user.confirmation_sent_at.blank?)
+    assert(!user.confirmation_token.blank?)
 
     # logout user
     #new_auth_token = JSON.parse(response.body)["authentication_token"]
@@ -64,16 +67,18 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     my_url_params = {"confirmation_token" => confirmation_token}
     get "users/confirmation", my_url_params, my_request_headers
     assert_response :found
-    #assert_response :success
 
     user = User.find_by_id(1)
     assert(user.unconfirmed_email.blank?)
+    assert(!user.confirmed_at.blank?)
+    assert(!user.confirmation_sent_at.blank?)
+    assert(user.confirmation_token.blank?)
 
     # login with old email - should now get a 401 since the email confirmation is now complete
     post "user/auth", login_request, login_headers
     assert_response :unauthorized
 
-    # login with new email - should succueed now that email confirmation is completed
+    # login with new email - should succeed now that email confirmation is completed
     new_login_request = '{"user":{"email":"testpetpaluser1@petpal.com", "password":"Test1234"}}'
     new_login_headers = { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
     post "user/auth", new_login_request, new_login_headers
@@ -81,6 +86,19 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert_not_nil(JSON.parse(response.body)["authentication_token"])
     assert_not_nil(JSON.parse(response.body)["email"])
     assert_not_nil(JSON.parse(response.body)["id"])
+
+    #
+    # Visit the confirmation link a 2nd time, we should no longer get the 302
+    # response that indicates success, but rather get some 200 response
+    #
+    get "users/confirmation", my_url_params, my_request_headers
+    assert_response :success
+
+    user = User.find_by_id(1)
+    assert(user.unconfirmed_email.blank?)
+    assert(!user.confirmed_at.blank?)
+    assert(!user.confirmation_sent_at.blank?)
+    assert(user.confirmation_token.blank?)
   end
 
   #
@@ -378,6 +396,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert(user.email.eql?('testuser1@petpal.com'))
     assert(user.confirmed_at.blank?)
     assert(!user.confirmation_token.blank?)
+    assert(!user.confirmation_sent_at.blank?)
 
     # Do a login, it should be successful even though email is not confirmed yet
 
@@ -400,6 +419,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert(user.email.eql?('testuser1@petpal.com'))
     assert(!user.confirmed_at.blank?)
     assert(user.confirmation_token.blank?)
+    assert(!user.confirmation_sent_at.blank?)
 
     #
     # Visit the confirmation link a 2nd time, we should no longer get the 302
@@ -414,6 +434,8 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert(user.email.eql?('testuser1@petpal.com'))
     assert(!user.confirmed_at.blank?)
     assert(user.confirmation_token.blank?)
+    assert(!user.confirmation_sent_at.blank?)
+
   end
 
   #
