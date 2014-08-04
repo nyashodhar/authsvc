@@ -100,8 +100,18 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   def create
    	build_resource(sign_up_params)
+
     if resource.save
-      theResponse = { :id => resource.id, :email => resource.email, :authentication_token => resource.authentication_token}
+
+      #
+      # Include the confirmation token that is sent in the confirmation
+      # instruction email in the JSON response. This allows for easy
+      # integration testing of the email confirmation for newly signed up
+      # users.
+      #
+
+      raw_token = resource.instance_variable_get("@raw_confirmation_token")
+      theResponse = { :id => resource.id, :email => resource.email, :authentication_token => resource.authentication_token, :confirmation_token => raw_token}
       render :status => 200, :json => theResponse
 	 	else
 	   	render :json => resource.errors, :status => :unprocessable_entity
