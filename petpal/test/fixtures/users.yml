@@ -26,5 +26,5 @@ user_<%= n %>:
   confirmation_token: <%= "confirmationtoken#{n}" %>
   confirmed_at: nil
   confirmation_sent_at: <%= Time.now %>
-  unconfirmed_email: nil
+  unconfirmed_email: NULL
 <% end %>

@@ -145,7 +145,8 @@ class RegistrationsController < Devise::RegistrationsController
 
     if(user.errors.blank?)
       logger.info "Email confirmation instructions were sent for user #{user.email}\n"
-      render :status => 200, :json => "Email confirmation instructions emailed."
+      raw_token = user.instance_variable_get("@raw_confirmation_token")
+      render :status => 200, :json => {:confirmation_token => raw_token}.to_json
     else
       if(!user.errors.messages[:email].blank?)
         logger.error "Devise said: \"#{user.errors.messages[:email]}\". Interpret as no email confirmation pending for #{user.email} (user id: #{user.id}), instructions will not be emailed.\n"

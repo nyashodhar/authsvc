@@ -133,6 +133,88 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
 
 
   #
+  # For a user not logged in:
+  # - Try to trigger sending of confirmation instruction - Should give 401 since not logged in
+  # - Log in
+  # - Trigger resending of email confirmation instruction
+  #    - Verify that the confirmation gets updated
+  # - Verify the email by visiting link
+  # - Verify that trying to retrigger the sending of the confirmation again fails because the
+  #    use has alread verified the email
+  #
+  test "Test API to trigger email confirmation" do
+
+    # Try to trigger email to be sent, should give 401 since it's a protected API call
+
+    trigger_email_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => "bogus123"}
+    put "user/confirmation", nil, trigger_email_request_headers
+    assert_response :unauthorized
+
+    # Do a login
+
+    login_request = '{"user":{"email":"user1@petpal.com", "password":"Test1234"}}'
+    login_request_headers = { 'CONTENT_TYPE' => 'application/json' }
+    post "user/auth", login_request, login_request_headers
+    assert_response :success
+
+    login_response = JSON.parse(response.body)
+    assert_not_nil(login_response["authentication_token"])
+    assert_not_nil(login_response["email"])
+    assert_not_nil(login_response["id"])
+    auth_token = login_response["authentication_token"]
+    user_id = login_response["id"]
+
+    user = User.find_by_id(user_id)
+    old_confirmation_token = user.confirmation_token
+
+    # Trigger sending of email confirmation to be sent, should succeed
+
+    trigger_email_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => auth_token}
+    put "user/confirmation", nil, trigger_email_request_headers
+    assert_response :success
+    trigger_response = JSON.parse(response.body)
+    assert_not_nil(trigger_response["confirmation_token"])
+    raw_token = trigger_response["confirmation_token"]
+
+    # The confirmation token should have been updated at this point..
+
+    user = User.find_by_id(user_id)
+    assert(user.email.eql?('user1@petpal.com'))
+    assert(user.confirmed_at.blank?)
+    assert(!user.confirmation_token.blank?)
+    assert(!user.confirmation_sent_at.blank?)
+    assert(!user.confirmation_token.eql?(old_confirmation_token))
+    assert(user.unconfirmed_email.blank?)
+
+    #
+    # Visit the email confirmation link
+    # - confirmed_at should be set
+    # - confirmation_token will be cleared
+    #
+
+    my_request_headers = {'Content-Type' => 'text/html'}
+    my_url_params = {"confirmation_token" => raw_token}
+    get "users/confirmation", my_url_params, my_request_headers
+    assert_response :found
+
+    user = User.find_by_id(user_id)
+    assert(!user.confirmed_at.blank?)
+    assert(user.confirmation_token.blank?)
+    assert(!user.confirmation_sent_at.blank?)
+    assert(user.unconfirmed_email.blank?)
+
+    #
+    # Try to trigger the sending of the confirmation instructions again, it should fail with a 412 since
+    # user's email is already confirmed.
+    #
+
+    trigger_email_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => auth_token}
+    put "user/confirmation", nil, trigger_email_request_headers
+    assert_response :precondition_failed
+  end
+
+
+  #
   # Test to login user
   # and then verify the user auth token
   #
@@ -144,7 +226,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     post "user/auth", login_request, headers
     assert_response :success
 	
-	login_response = JSON.parse(response.body)
+	  login_response = JSON.parse(response.body)
     assert_not_nil(login_response["authentication_token"])
     assert_not_nil(login_response["email"])
     assert_not_nil(login_response["id"])
@@ -226,13 +308,13 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert_response :unauthorized
   end
 
-#
-# Test stale token reset
-# - Do login
-# - Use verify API and check you get a 200
-# - Sleep until token is expired
-# - Do a sign-in and verify that you get a new token
-#
+  #
+  # Test stale token reset
+  # - Do login
+  # - Use verify API and check you get a 200
+  # - Sleep until token is expired
+  # - Do a sign-in and verify that you get a new token
+  #
   test "token refresh on relogin" do
     
     login_request = '{"user":{"email":"user1@petpal.com", "password":"Test1234"}}'
@@ -269,11 +351,11 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
   end
 
 
-#
-# Test email address can't be updated to address in use by other user
-# - Do login
-# - Do user edit and update email address to an address in use by other user, you 422
-#
+  #
+  # Test email address can't be updated to address in use by other user
+  # - Do login
+  # - Do user edit and update email address to an address in use by other user, you 422
+  #
 	test "edit email to already in use email" do
 	    
 	  login_request = '{"user":{"email":"user1@petpal.com", "password":"Test1234"}}'
