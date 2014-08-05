@@ -66,7 +66,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     my_request_headers = {'Content-Type' => 'text/html'}
     my_url_params = {"confirmation_token" => confirmation_token}
     get "users/confirmation", my_url_params, my_request_headers
-    assert_response :found
+    assert_response :created
 
     user = User.find_by_id(1)
     assert(user.unconfirmed_email.blank?)
@@ -88,11 +88,11 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert_not_nil(JSON.parse(response.body)["id"])
 
     #
-    # Visit the confirmation link a 2nd time, we should no longer get the 302
-    # response that indicates success, but rather get some 200 response
+    # Visit the confirmation link a 2nd time, we should no longer get the 201
+    # response that indicates success, but rather get some 404 response
     #
     get "users/confirmation", my_url_params, my_request_headers
-    assert_response :success
+    assert_response :not_found
 
     user = User.find_by_id(1)
     assert(user.unconfirmed_email.blank?)
@@ -195,7 +195,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     my_request_headers = {'Content-Type' => 'text/html'}
     my_url_params = {"confirmation_token" => raw_token}
     get "users/confirmation", my_url_params, my_request_headers
-    assert_response :found
+    assert_response :created
 
     user = User.find_by_id(user_id)
     assert(!user.confirmed_at.blank?)
@@ -494,7 +494,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     my_request_headers = {'Content-Type' => 'text/html'}
     my_url_params = {"confirmation_token" => confirmation_token}
     get "users/confirmation", my_url_params, my_request_headers
-    assert_response :found
+    assert_response :created
 
     user = User.find_by_id(user_id)
     assert(user.email.eql?('testuser1@petpal.com'))
@@ -503,11 +503,11 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert(!user.confirmation_sent_at.blank?)
 
     #
-    # Visit the confirmation link a 2nd time, we should no longer get the 302
-    # response that indicates success, but rather get some 200 response
+    # Visit the confirmation link a 2nd time, we should no longer get the 201
+    # response that indicates success, but rather get some 404 response
     #
     get "users/confirmation", my_url_params, my_request_headers
-    assert_response :success
+    assert_response :not_found
 
     # Check that user is still as expected after bogus 2nd confirmation attempt
 

@@ -14,14 +14,24 @@ class CatchSyntaxErrors
     begin
       @app.call(env)
     rescue SyntaxError => error
-      trace = error.backtrace[0,10].join("\n")
-      @logger.error "CatchSyntaxErrors: Error: #{error.class.name} : #{error.message}. Trace:\n#{trace}\n"
-      error_output = I18n.t("500response_internal_server_error")
+      return handleError(error)
 
-      return [
-          500, { "Content-Type" => "application/json" },
-          [ { error: error_output }.to_json ]
-      ]
+    rescue NameError => error
+      return handleError(error)
     end
   end
+
+  private
+
+  def handleError(error)
+    trace = error.backtrace[0,10].join("\n")
+    @logger.error "CatchSyntaxErrors: Error: #{error.class.name} : #{error.message}. Trace:\n#{trace}\n"
+    error_output = I18n.t("500response_internal_server_error")
+
+    return [
+        500, { "Content-Type" => "application/json" },
+        [ { error: error_output }.to_json ]
+    ]
+  end
+
 end

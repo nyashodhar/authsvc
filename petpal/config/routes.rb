@@ -17,6 +17,10 @@ Rails.application.routes.draw do
     get 'user/auth', to: 'sessions#verify', as: 'verify'
     post 'user/auth', to: 'sessions#login', as: 'login'
     delete 'user/auth', to: 'sessions#logout', as: 'logout'
+
+    #ConfirmationsController:
+    #===============================
+    get 'users/confirmation', to: 'confirmations#processConfirmation', as: 'processConfirmation'
   end
 
   #devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions" }

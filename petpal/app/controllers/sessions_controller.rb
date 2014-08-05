@@ -1,4 +1,3 @@
-
 ########################################################
 #
 # This class provides authentication services
