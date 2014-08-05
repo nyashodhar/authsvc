@@ -458,7 +458,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
   # - After confirmation the 'confirmed_at' time should be written
   # - It should not be possible to use the confirmation token more than one time
   #
-	test "create user success" do
+	test "Create user success and email confirmation" do
 	    
 	  register_request = '{"user":{"email":"testuser1@petpal.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
 	  register_headers = { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
@@ -466,7 +466,6 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
 	  # register
 	  post "user", register_request, register_headers
 	  assert_response :success
-	  assert_not_nil(JSON.parse(response.body)["authentication_token"])
 	  assert_not_nil(JSON.parse(response.body)["email"])
 	  assert_not_nil(JSON.parse(response.body)["id"])
     assert_not_nil(JSON.parse(response.body)["confirmation_token"])

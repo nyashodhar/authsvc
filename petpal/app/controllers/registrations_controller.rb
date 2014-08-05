@@ -111,7 +111,7 @@ class RegistrationsController < Devise::RegistrationsController
       #
 
       raw_token = resource.instance_variable_get("@raw_confirmation_token")
-      theResponse = { :id => resource.id, :email => resource.email, :authentication_token => resource.authentication_token, :confirmation_token => raw_token}
+      theResponse = { :id => resource.id, :email => resource.email, :confirmation_token => raw_token}
       render :status => 200, :json => theResponse
 	 	else
 	   	render :json => resource.errors, :status => :unprocessable_entity
