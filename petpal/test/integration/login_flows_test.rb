@@ -105,15 +105,24 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
   # Test that requests for which the URL path could not be mapped to any
   # controller get a proper 404 formatted response
   #
-  test "Verify invalid 404 for URL with no mapping" do
+  test "Verify 404 response for URL with no mapping - JSON and HTML" do
 
-    my_request_headers = {'Content-Type' => 'application/json'}
+    # Do request as JSON client
+
+    my_request_headers = {'Content-Type' => 'application/json', 'Accept' => 'application/json'}
     get "user/authfoobar", nil, my_request_headers
     assert_response :not_found
 
     my_response = JSON.parse(response.body)
     assert_not_nil(my_response["error"])
     assert(my_response["error"].eql?("Resource not found"))
+
+    # Do request as HTML client
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "user/authfoobar", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
   end
 
   #
