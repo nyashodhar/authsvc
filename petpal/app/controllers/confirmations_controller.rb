@@ -31,9 +31,6 @@ class ConfirmationsController < Devise::ConfirmationsController
   ################
   def processConfirmation
 
-    sdfasfasfa sadfasdf
-
-
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
 
     if resource.errors.empty?
