@@ -21,12 +21,14 @@ Rails.application.routes.draw do
     #ConfirmationsController:
     #===============================
     get 'users/confirmation', to: 'confirmations#processConfirmation', as: 'processConfirmation'
+
+    match "*path", to: "errors#not_found", via: :all
   end
 
   #devise_for :users, :controllers => {:registrations => "registrations", :sessions => "sessions" }
   devise_for :users
 
-  match "*path", to: "errors#not_found", via: :all
+  #match "*path", to: "errors#not_found", via: :all
 
   ##devise_for :users, :controllers => {:registrations => "registrations"}
 

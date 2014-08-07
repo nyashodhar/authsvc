@@ -3,6 +3,42 @@ require 'test_helper'
 class LoginFlowsTest < ActionDispatch::IntegrationTest
 
   #
+  # Verify that a bunch of devise MVC HTML controllers are disabled and give 404 page
+  #
+  test "Devise controllers are disabled in routes" do
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "users/sign_in", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "users/sign_up", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "users/password/new", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "users/password/edit", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "users/unlock", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+
+    my_request_headers = {'Content-Type' => 'application/json'}
+    get "users/unlock/new", nil, my_request_headers
+    assert_response :not_found
+    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+  end
+
+  #
   # Test that the email address can be changed
   # - Do login
   # - Do user edit and update email address to an address not in in use by other user => should be successful
