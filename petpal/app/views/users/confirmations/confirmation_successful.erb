@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Account confirmation successful</title>
+  <title><%= t('confirmation_successful_title') %></title>
   <style type="text/css">
       body, td { color:#000000; font-size:14px; font-family:Verdana,Helvetica,Arial; }
       .divider { background-color:#555555; height:2px; }
@@ -31,9 +31,9 @@
           <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/wwwanimalhi-dog-peeking-through-SMALL.jpg" width="250" height="232" alt="Welcome!">
         </td>
         <td valign="top">
-          <h2>Your account has been confirmed!</h2>
-          <p>We're happy you peeked through so we can know you better.</p>
-          <p>The link you used to reach this page can not be used again, but we hope to see you again soon in the PetPal app!</p>
+          <h2><%= t('confirmation_successful_title') %></h2>
+          <p><%= t('confirmation_successful_paragraph1') %></p>
+          <p><%= t('confirmation_successful_paragraph2') %></p>
         </td>
       </tr>
       <tr>
@@ -41,7 +41,7 @@
       </tr>
       <tr>
         <td id="footer" colspan="2" align="center">
-          <p>&copy;2014 PetPal</p>
+          <p><%= t('common_copyright') %><%= Time.now.year %> <%= t('common_product_name') %></p>
         </td>
       </tr>
     </table>
