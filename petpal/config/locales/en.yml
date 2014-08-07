@@ -39,3 +39,8 @@ en:
   page_not_found_title: "Page Not Found"
   page_not_found_paragraph1: "We put our smartest pal on the case, but couldn't find the page you are looking for."
   page_not_found_paragraph2: "We'll look at our pal's notes later and try to find what you were looking for."
+
+  # views/users/confirmations/confirmation_failed.erb
+  confirmation_failed_title: "Account confirmation failed"
+  confirmation_failed_paragraph1: "The link you pressed is no longer valid, or your email might already be confirmed."
+  confirmation_failed_paragraph2: "If your email is not confirmed yet, you can create a new link from your PetPal app and try again."

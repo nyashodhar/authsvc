@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Account confirmation failed</title>
+  <title><%= t('confirmation_failed_title') %></title>
   <style type="text/css">
       body, td { color:#000000; font-size:14px; font-family:Verdana,Helvetica,Arial; }
       .divider { background-color:#555555; height:2px; }
@@ -31,9 +31,9 @@
           <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/dog-computer-SMALL.jpg" width="250" height="166" alt="Welcome!">
         </td>
         <td valign="top">
-          <h2>Account confirmation failed</h2>
-          <p>The link you pressed is no longer valid, or your email might already be confirmed.</p>
-          <p>If your email is not confirmed yet, you can create a new link from your PetPal app and try again.</p>
+          <h2><%= t('confirmation_failed_title') %></h2>
+          <p><%= t('confirmation_failed_paragraph1') %></p>
+          <p><%= t('confirmation_failed_paragraph2') %></p>
         </td>
       </tr>
       <tr>
@@ -41,7 +41,7 @@
       </tr>
       <tr>
         <td id="footer" colspan="2" align="center">
-          <p>&copy;2014 PetPal</p>
+          <p><%= t('common_copyright') %><%= Time.now.year %> <%= t('common_product_name') %></p>
         </td>
       </tr>
     </table>
