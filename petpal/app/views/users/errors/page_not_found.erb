@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Page Not Found</title>
+  <title><%= t('page_not_found_title') %></title>
   <style type="text/css">
       body, td { color:#000000; font-size:14px; font-family:Verdana,Helvetica,Arial; }
       .divider { background-color:#555555; height:2px; }
@@ -31,9 +31,9 @@
           <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/wwwhealthcentrecouk-dog-reading-on-white-background.jpg" width="250" height="166" alt="Welcome!">
         </td>
         <td valign="top">
-          <h2>Page Not Found</h2>
-          <p>We put our smartest pal on the case, but couldn't find the page you are looking for.</p>
-          <p>We'll look at our pal's notes later and try to find what you were looking for.</p>
+          <h2><%= t('page_not_found_title') %></h2>
+          <p><%= t('page_not_found_paragraph1') %></p>
+          <p><%= t('page_not_found_paragraph2') %></p>
         </td>
       </tr>
       <tr>
@@ -41,7 +41,7 @@
       </tr>
       <tr>
         <td id="footer" colspan="2" align="center">
-          <p>&copy;2014 PetPal</p>
+          <p><%= t('common_copyright') %><%= Time.now.year %> <%= t('common_product_name') %></p>
         </td>
       </tr>
     </table>
