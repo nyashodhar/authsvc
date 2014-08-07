@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Unexpected error</title>
+  <title><%= t('unexpected_error_title') %></title>
   <style type="text/css">
       body, td { color:#000000; font-size:14px; font-family:Verdana,Helvetica,Arial; }
       .divider { background-color:#555555; height:2px; }
@@ -31,10 +31,10 @@
           <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/error-page-surprised-dogs-edited.jpg" width="250" height="151" alt="Welcome!">
         </td>
         <td valign="top">
-          <h2>Something went wrong</h2>
-          <p>There was a problem with your request.</p>
-          <p>We're sorry if it gave you a long face.</p>
-          <p>Hopefully tails will be wagging again very soon.</p>
+          <h2><%= t('unexpected_error_title') %></h2>
+          <p><%= t('unexpected_error_paragraph1') %></p>
+          <p><%= t('unexpected_error_paragraph2') %></p>
+          <p><%= t('unexpected_error_paragraph3') %></p>
         </td>
       </tr>
       <tr>
@@ -42,7 +42,7 @@
       </tr>
       <tr>
         <td id="footer" colspan="2" align="center">
-          <p>&copy;2014 PetPal</p>
+          <p><%= t('common_copyright') %><%= Time.now.year %> <%= t('common_product_name') %></p>
         </td>
       </tr>
     </table>

@@ -35,6 +35,12 @@ en:
   common_product_name: "PetPal"
   common_copyright: "©"
 
+  # views/users/errors/unexpected_error.erb
+  unexpected_error_title: "Something went wrong YO"
+  unexpected_error_paragraph1: "There was a problem with your request."
+  unexpected_error_paragraph2: "We're sorry if it gave you a long face."
+  unexpected_error_paragraph3: "Hopefully tails will be wagging again very soon."
+
   # views/users/errors/page_not_found.erb
   page_not_found_title: "Page Not Found"
   page_not_found_paragraph1: "We put our smartest pal on the case, but couldn't find the page you are looking for."
