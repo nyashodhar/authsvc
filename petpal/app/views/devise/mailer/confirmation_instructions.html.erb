@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Welcome to PetPal</title>
+  <title><%= t('confirmation_instructions_title') %></title>
   <style type="text/css">
       body, td { color:#000000; font-size:14px; font-family:Verdana,Helvetica,Arial; }
       .divider { background-color:#555555; height:2px; }
@@ -31,13 +31,13 @@
           <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/CuteShibaInu-Cleaned-SMALL.jpg" width="170" height="154" alt="Welcome!">
         </td>
         <td valign="top">
-          <h2>Welcome to PetPal!</h2>
-          <p>The PetPal team is excited to welcome you as a member! If we had tails we would be wagging!</p>
-          <p>Please click the link below to confirm your email address.</p>
-          <p>Have fun!</p>
+          <h2><%= t('confirmation_instructions_title') %></h2>
+          <p><%= t('confirmation_instructions_paragraph1') %></p>
+          <p><%= t('confirmation_instructions_paragraph2') %></p>
+          <p><%= t('confirmation_instructions_paragraph3') %></p>
           <p>
-            <%= link_to 'Confirm my account', confirmation_url(@resource, confirmation_token: @token) %>
-            <span class="smallsubscript">(You can only click this link once)</span>
+            <%= link_to t('confirmation_instructions_link_confirm_account'), confirmation_url(@resource, confirmation_token: @token) %>
+            <span class="smallsubscript"><%= t('confirmation_instructions_paren_only_click_once') %></span>
           </p>
         </td>
       </tr>
@@ -46,8 +46,8 @@
       </tr>
       <tr>
         <td id="footer" colspan="2" align="center">
-          <p><a href="#">Unsubscribe</a> if you do not wish to receive these emails in the future.</p>
-          <p>&copy;2014 PetPal</p>
+          <p><a href="#"><%= t('confirmation_instructions_link_unsubscribe') %></a> <%= t('confirmation_instructions_sentence_unsubscribe') %></p>
+          <p><%= t('common_copyright') %><%= Time.now.year %> <%= t('common_product_name') %></p>
         </td>
       </tr>
     </table>

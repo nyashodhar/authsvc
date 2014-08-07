@@ -31,12 +31,19 @@ en:
   422response_unable_to_update_user: "User could not be updated."
   500response_internal_server_error: "Internal Server Error"
 
-  # strings shared across views
+  ##########################
+  # SHARED (WEB AND EMAILS)
+  ##########################
+
   common_product_name: "PetPal"
   common_copyright: "©"
 
+  ##########################
+  # WEB PAGES
+  ##########################
+
   # views/users/errors/unexpected_error.erb
-  unexpected_error_title: "Something went wrong YO"
+  unexpected_error_title: "Something went wrong"
   unexpected_error_paragraph1: "There was a problem with your request."
   unexpected_error_paragraph2: "We're sorry if it gave you a long face."
   unexpected_error_paragraph3: "Hopefully tails will be wagging again very soon."
@@ -56,3 +63,16 @@ en:
   confirmation_successful_paragraph1: "We're happy you peeked through so we can know you better."
   confirmation_successful_paragraph2: "The link you used to reach this page can not be used again, but we hope to see you again soon in the PetPal app!"
 
+  ##########################
+  # EMAILS
+  ##########################
+
+  # views/devise/mailer/confirmation_instructions.erb
+  confirmation_instructions_title: "Welcome to PetPal!"
+  confirmation_instructions_paragraph1: "The PetPal team is excited to welcome you as a member! If we had tails we would be wagging!"
+  confirmation_instructions_paragraph2: "Please click the link below to confirm your email address."
+  confirmation_instructions_paragraph3: "Have fun!"
+  confirmation_instructions_link_confirm_account: "Confirm my account"
+  confirmation_instructions_paren_only_click_once: "(You can only click this link once)"
+  confirmation_instructions_link_unsubscribe: "Unsubscribe"
+  confirmation_instructions_sentence_unsubscribe: "if you do not wish to receive these emails in the future."
