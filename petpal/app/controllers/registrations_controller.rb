@@ -59,8 +59,8 @@ class RegistrationsController < Devise::RegistrationsController
         passwordCheck = user.valid_password?(currentPassword)
       end
       if(!passwordCheck)
-        logger.error "The current password specified was not valid, giving 422 response"
-        render :status => :unprocessable_entity, :json => I18n.t("422response_current_password_confirmation_failure")
+        logger.error "The current password specified was not valid"
+        render :status => :unprocessable_entity, :json => {:error => I18n.t("422response_current_password_confirmation_failure")}
         return
       end
     end
@@ -68,7 +68,7 @@ class RegistrationsController < Devise::RegistrationsController
     update_resource(user, userUpdateFields)
 
     if !user.save
-      render :status => 422, :json => I18n.t("422response_unable_to_update_user")
+      render :status => :unprocessable_entity, :json => {:error => I18n.t("422response_unable_to_update_user")}
       return
     end
 
