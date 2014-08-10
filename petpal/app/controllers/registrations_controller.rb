@@ -12,7 +12,7 @@ class RegistrationsController < Devise::RegistrationsController
   include ApplicationHelper
 
   # Required to for devise to not require the presence of an authenticity token
-  skip_before_action :verify_authenticity_token, :only => [:create, :editUser, :delete, :triggerConfirmation]
+  skip_before_action :verify_authenticity_token, :only => [:create, :editUser, :delete, :triggerConfirmation, :triggerPasswordReset]
 
   #
   # Note: Check if there is a sign-in for the auth token, and that the sign-in
@@ -134,7 +134,8 @@ class RegistrationsController < Devise::RegistrationsController
 
   ##################
   # Trigger the sending of a confirmation email for the user
-  # POST /user/confirmation
+  # TODO: THIS SHOULD BE POST - AN CONFIRMATION INSTRUCTION IS CREATED - NOT UPDATED
+  # PUT /user/confirmation
   # 412 - If the email address of the user if already confirmed
   # curl -v -X PUT http://127.0.0.1:3000/user/confirmation -H "Content-Length: 0" -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
@@ -158,4 +159,55 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+
+  ##################
+  # Trigger the sending of an email containing instructions on how to reset the password
+  #
+  # This API is PUBLIC!! We therefore can't allow it to be used as a means of
+  # determining which userids are valid and which are not.
+  #
+  # This API should therefore ALWAYS return a 201 response to the client even if there
+  # was actually no user found for the token and no reset instruction email was sent.
+  #
+  # POST /user/password/reset
+  # 422 - If the request did not specify an email address
+  # 201 - If the user for email could not be found
+  # 201 - If the user for the email could not be found
+  # 500 - If the user for email could be found, but there was an unexpected error when
+  #       sending the reset instruction
+  #
+  # curl -v -X POST http://127.0.0.1:3000/user/password/reset -H "Accept: application/json" -H "Content-Type: application/json" -d '{"email":"test4@example.com"}'
+  ##################
+  def triggerPasswordReset
+
+    email = params[:email]
+
+    if(email.blank?)
+      logger.info "No email specified when trying to trigger password reset email\n"
+      render :status => :unprocessable_entity, :json => {:error => I18n.t("422response_no_email_specified")}
+      return
+    end
+
+    user = User.find_by_email(email)
+    if(user.blank?)
+      logger.error "No user found for email #{email}, we will send fake reset response\n"
+      raw, enc = Devise.token_generator.generate(User, :reset_password_token)
+      the_response = { :email => email, :reset_password_sent_at => Time.now.utc}
+      render :status => 201, :json => the_response
+      return
+    end
+
+    # Try to generate the real password reset email
+    raw_reset_token = user.send_reset_password_instructions
+
+    if(!user.errors.empty?)
+      logger.info "Error when trying to send password reset instructions for user #{email}: #{user.errors.inspect}\n"
+      render :status => 500, :json => {:error => I18n.t("500response_internal_server_error")}.to_json
+      return
+    end
+
+    # Everything worked out, give JSON response for successful outcome
+    the_response = { :email => user.email, :reset_password_sent_at => user.reset_password_sent_at}
+    render :status => 201, :json => the_response
+  end
 end

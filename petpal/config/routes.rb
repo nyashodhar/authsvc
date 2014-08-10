@@ -11,6 +11,7 @@ Rails.application.routes.draw do
     post 'user', to: 'registrations#create', as: 'create'
     delete 'user', to: 'registrations#delete', as: 'delete'
     put 'user/confirmation', to: 'registrations#triggerConfirmation', as: 'triggerConfirmation'
+    post 'user/password/reset', to: 'registrations#triggerPasswordReset', as: 'triggerPasswordReset'
 
     #SessionsController:
     #===============================
