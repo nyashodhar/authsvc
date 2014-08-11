@@ -69,6 +69,11 @@ en:
   confirmation_successful_paragraph1: "We're happy you peeked through so we can know you better."
   confirmation_successful_paragraph2: "The link you used to reach this page can not be used again, but we hope to see you again soon in the PetPal app!"
 
+  # views/users/confirmations/password_reset_successful.erb
+  password_reset_successful_title: "Your password has been updated!"
+  password_reset_successful_paragraph1: "Congratulations, you have jumped through the hoop!"
+  password_reset_successful_paragraph2: "When you return to the PetPal app, you can use your new password to log in."
+
   ##########################
   # EMAILS
   ##########################

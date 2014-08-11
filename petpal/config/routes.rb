@@ -26,9 +26,10 @@ Rails.application.routes.draw do
     # PasswordsController:
     #===============================
     get 'users/password/edit', to: 'passwords#edit', as: 'edit'
+    put 'users/password', to: 'passwords#update', as: 'update'
+    get 'users/password/success', to: 'passwords#showResetSuccess', as: 'showResetSuccess'
 
     match "*path", to: "errors#not_found", via: :all
-
   end
 
   devise_for :users
