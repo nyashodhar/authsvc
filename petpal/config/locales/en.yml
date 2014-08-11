@@ -76,3 +76,11 @@ en:
   confirmation_instructions_paren_only_click_once: "(You can only click this link once)"
   confirmation_instructions_link_unsubscribe: "Unsubscribe"
   confirmation_instructions_sentence_unsubscribe: "if you do not wish to receive these emails in the future."
+
+  # views/devise/mailer/reset_password_instructions.html.erb
+  reset_password_instructions_title: "Change your password"
+  reset_password_instructions_hello: "Hello, %{email}!"
+  reset_password_instructions_paragraph1: "Our guard dog says someone wants to change your PetPal password."
+  reset_password_instructions_paragraph2: "If you didn't request this, please ignore this email and excuse us for barking up the wrong tree."
+  reset_password_instructions_paragraph3: "Your password won't change until you access the link below and create a new one."
+  reset_password_instructions_reset_password: "Change my password"
