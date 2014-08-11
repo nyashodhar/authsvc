@@ -1,16 +1,49 @@
-<h2>Change your password</h2>
-
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
-  <%= devise_error_messages! %>
-  <%= f.hidden_field :reset_password_token %>
-
-  <div><%= f.label :password, "New password" %><br />
-    <%= f.password_field :password, autofocus: true, autocomplete: "off" %></div>
-
-  <div><%= f.label :password_confirmation, "Confirm new password" %><br />
-    <%= f.password_field :password_confirmation, autocomplete: "off" %></div>
-
-  <div><%= f.submit "Change my password" %></div>
-<% end %>
-
-<%= render "devise/shared/links" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <title><%= t('passwords_edit_title') %></title>
+  <%= render "shared/styles/basic_css" %>
+</head>
+<body>
+<table width="100%" id="background" border="0" cellpadding="0" cellspacing="0">
+  <tr><td align="center" valign="top">
+    <table width="650" id="main" border="0" cellpadding="0" cellspacing="12">
+      <tr>
+        <td id="header" colspan="2" bgcolor="#89a605">
+          <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/PetPal-email-header.png" width="600" height="66" alt="PetPal: A New Pet Dimension">
+        </td>
+      </tr>
+      <tr>
+        <td class="divider" colspan="2" bgcolor="#555555" height="2"></td>
+      </tr>
+      <tr class="petpal">
+        <td valign="top">
+          <img src="https://s3-us-west-1.amazonaws.com/petpal-dev/customcraze-police-dog-SMALL.jpg" width="170" height="153" alt="Welcome!">
+        </td>
+        <td width=400 valign="top">
+          <h2><%= t('passwords_edit_title') %></h2>
+          <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+              <p><%= devise_error_messages! %></p>
+              <%= f.hidden_field :reset_password_token %>
+              <p><%= f.label :password, t('passwords_edit_formlabel_new_password') %></p>
+              <p><%= f.password_field :password, autofocus: true, autocomplete: "off" %></p>
+              <p><%= f.label :password_confirmation, t('passwords_edit_formlabel_confirm_new_password') %></p>
+              <p><%= f.password_field :password_confirmation, autocomplete: "off" %></p>
+              <p><%= f.submit t('passwords_edit_submit_button_change_password') %></p>
+          <% end %>
+        </td>
+      </tr>
+      <tr>
+        <td class="divider" colspan="2" bgcolor="#555555" height="1"></td>
+      </tr>
+      <tr>
+        <td id="footer" colspan="2" align="center">
+          <p><%= t('common_copyright') %><%= Time.now.year %> <%= t('common_product_name') %></p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>

@@ -22,10 +22,11 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     assert_response :not_found
     assert(response.headers["Content-Type"].downcase.include?("text/html"))
 
-    my_request_headers = {'Content-Type' => 'application/json'}
-    get "users/password/edit", nil, my_request_headers
-    assert_response :not_found
-    assert(response.headers["Content-Type"].downcase.include?("text/html"))
+    # This one we are actually using now that password reset is introduced.
+    #my_request_headers = {'Content-Type' => 'application/json'}
+    #get "users/password/edit", nil, my_request_headers
+    #assert_response :not_found
+    #assert(response.headers["Content-Type"].downcase.include?("text/html"))
 
     my_request_headers = {'Content-Type' => 'application/json'}
     get "users/unlock", nil, my_request_headers
