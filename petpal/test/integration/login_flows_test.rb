@@ -267,7 +267,9 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     put "user/confirmation", nil, trigger_email_request_headers
     assert_response :success
     trigger_response = JSON.parse(response.body)
+    assert_not_nil(trigger_response["confirmation_sent_at"])
     assert_not_nil(trigger_response["confirmation_token"])
+
     raw_token = trigger_response["confirmation_token"]
 
     # The confirmation token should have been updated at this point..

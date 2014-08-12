@@ -72,24 +72,33 @@ class RegistrationsController < Devise::RegistrationsController
       return
     end
 
-    #
-    # If the email was changed and an email with confirmation instruction was sent,
-    # then this is our one and only time to capture the one time generated clear-text
-    # token. We will capture it here and include it in the JSON response. This makes
-    # it possible to create integration tests for the email confirmation step!
-    #
-
-    theResponse = nil
+    the_response = nil
 
     if(!userUpdateFields[:email].blank? && !user.email.downcase.eql?(userUpdateFields[:email].downcase))
       logger.info "The request changes the email from #{user.email} to #{userUpdateFields[:email].downcase}. Email confirmation instructions will be sent and confirmation token will be included in the JSON response.\n"
-      raw_token = user.instance_variable_get("@raw_confirmation_token")
-      theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token, :confirmation_token => raw_token}
+
+      the_response = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+
+      enable_test_hooks = Rails.application.config.enable_test_hooks
+      if(enable_test_hooks)
+
+        #
+        # Hook for integration test: The email was changed and an email with confirmation
+        # instruction was sent, capture the one time generated clear-text token
+        # and include it in the JSON response. This makes it possible to create integration
+        # tests for the email confirmation step.
+        #
+
+        raw_token = user.instance_variable_get("@raw_confirmation_token")
+        logger.info "Including raw confirmation token in response: #{raw_token}\n"
+        the_response[:confirmation_token] = raw_token
+      end
+
     else
-      theResponse = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
+      the_response = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
     end
 
-    render :status => 200, :json => theResponse
+    render :status => 200, :json => the_response
 
   end
 
@@ -158,7 +167,17 @@ class RegistrationsController < Devise::RegistrationsController
     if(user.errors.blank?)
       logger.info "Email confirmation instructions were sent for user #{user.email}\n"
       raw_token = user.instance_variable_get("@raw_confirmation_token")
-      render :status => 200, :json => {:confirmation_token => raw_token}.to_json
+
+      the_response = { :confirmation_sent_at => user.confirmation_sent_at }
+
+      enable_test_hooks = Rails.application.config.enable_test_hooks
+      if(enable_test_hooks)
+        # Assume we're in test environment - add hook in response to enable testing
+        logger.info "Including raw confirmation token in response: #{raw_token}\n"
+        the_response[:confirmation_token] = raw_token
+      end
+
+      render :status => 200, :json => the_response
     else
       if(!user.errors.messages[:email].blank?)
         logger.error "Devise said: \"#{user.errors.messages[:email]}\". Interpret as no email confirmation pending for #{user.email} (user id: #{user.id}), instructions will not be emailed.\n"
@@ -224,6 +243,7 @@ class RegistrationsController < Devise::RegistrationsController
     enable_test_hooks = Rails.application.config.enable_test_hooks
     if(enable_test_hooks)
       # Assume we're in test environment - add hook in response to enable testing
+      logger.info "Including raw confirmation token in response: #{raw_reset_token}\n"
       the_response[:reset_password_token] = raw_reset_token
     end
 
