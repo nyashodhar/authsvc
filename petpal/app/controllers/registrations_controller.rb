@@ -207,7 +207,15 @@ class RegistrationsController < Devise::RegistrationsController
     end
 
     # Everything worked out, give JSON response for successful outcome
+
     the_response = { :email => user.email, :reset_password_sent_at => user.reset_password_sent_at}
+
+    enable_test_hooks = Rails.application.config.enable_test_hooks
+    if(enable_test_hooks)
+      # Assume we're in test environment - add hook in response to enable testing
+      the_response[:reset_password_token] = raw_reset_token
+    end
+
     render :status => 201, :json => the_response
   end
 end

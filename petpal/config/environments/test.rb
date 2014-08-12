@@ -4,6 +4,9 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   #####################################################################################
 
+  # Enable some hooks for testing purposes - only set to true in test env
+  config.enable_test_hooks = true
+
   # Setting for auth token expiration - dev TTL=10s
   config.auth_token_ttl_ms = 3000
 

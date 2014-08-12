@@ -4,7 +4,10 @@ Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
   #####################################################################################
 
-  # Setting for auth token expiration - dev TTL=10s
+  # Enable some hooks for testing purposes - only set to true in test env
+  config.enable_test_hooks = false
+
+  # Setting for auth token expiration
   config.auth_token_ttl_ms = 6000000
 
   config.action_mailer.default_url_options = { :host => '127.0.0.1:3000' }
