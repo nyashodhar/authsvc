@@ -99,21 +99,32 @@ class RegistrationsController < Devise::RegistrationsController
   # curl -v -X POST http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def create
+
    	build_resource(sign_up_params)
 
     if resource.save
 
-      #
-      # Include the confirmation token that is sent in the confirmation
-      # instruction email in the JSON response. This allows for easy
-      # integration testing of the email confirmation for newly signed up
-      # users.
-      #
+      logger.info "Created user #{resource.email}\n"
+      the_response = { :id => resource.id, :email => resource.email}
+      enable_test_hooks = Rails.application.config.enable_test_hooks
 
-      raw_token = resource.instance_variable_get("@raw_confirmation_token")
-      theResponse = { :id => resource.id, :email => resource.email, :confirmation_token => raw_token}
-      render :status => 200, :json => theResponse
-	 	else
+      if(enable_test_hooks)
+
+        #
+        # Include the confirmation token that is sent in the confirmation
+        # instruction email in the JSON response. This allows for easy
+        # integration testing of the email confirmation for newly signed up
+        # users.
+        #
+
+        raw_token = resource.instance_variable_get("@raw_confirmation_token")
+        logger.info "Including raw confirmation token in response: #{raw_token}\n"
+        the_response[:confirmation_token] = raw_token
+      end
+
+      render :status => 200, :json => the_response
+    else
+      logger.error "Could not create a user with email #{resource.email}\n"
 	   	render :json => resource.errors, :status => :unprocessable_entity
 		end
   end
