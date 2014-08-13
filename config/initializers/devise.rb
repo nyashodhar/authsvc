@@ -5,6 +5,7 @@ Devise.setup do |config|
   # random tokens. Changing this key will render invalid all existing
   # confirmation, reset password and unlock tokens in the database.
   # config.secret_key = '566ca214edaf42aede8a693133099631e4eab2fdbdd44838cdc2bf6488e4a0b1a1b958d0a6cf0c4fb2c4a7b1629deab0833b6e0c744eb9e1cfbc9607d03520fb'
+  config.secret_key = '70cde411d9fdbef7c1d4f2855d42786053347eb9f3e667c41eaf6f442f23511d5eaa1cb9185efebd8bc500b300815a8da2be858d6888df47e27d50a309c6b5bc'
 
   # ==> Mailer Configuration
   # Configure the e-mail address which will be shown in Devise::Mailer,
@@ -37,7 +38,7 @@ Devise.setup do |config|
   # if you set :request_keys to [:subdomain], :subdomain will be used on authentication.
   # The same considerations mentioned for authentication_keys also apply to request_keys.
   # config.request_keys = []
-
+  
   # Configure which authentication keys should be case-insensitive.
   # These keys will be downcased upon creating or modifying a user and when used
   # to authenticate or find a user. Default is :email.
