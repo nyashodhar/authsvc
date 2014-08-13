@@ -75,7 +75,7 @@ class RegistrationsController < Devise::RegistrationsController
     the_response = nil
 
     if(!userUpdateFields[:email].blank? && !user.email.downcase.eql?(userUpdateFields[:email].downcase))
-      logger.info "The request changes the email from #{user.email} to #{userUpdateFields[:email].downcase}. Email confirmation instructions will be sent and confirmation token will be included in the JSON response.\n"
+      logger.info "The request changes the email from #{user.email} to #{userUpdateFields[:email].downcase}. Email confirmation instructions will be sent.\n"
 
       the_response = { :id => user.id, :email => user.email, :authentication_token => user.authentication_token}
 
