@@ -8,6 +8,19 @@ Bundler.require(*Rails.groups)
 
 module Petpal
   class Application < Rails::Application
+
+    # From-address for mailer
+    config.mailer_sender = "usermanager@petpal.mobi"
+
+    # Enable some hooks for testing purposes - only set to true in test env
+    config.enable_test_hooks = false
+
+    # Ensure JSON parsing errors get nice JSON responses
+    config.middleware.insert_before ActionDispatch::ParamsParser, "CatchJsonParseErrors"
+
+    # Ensure SyntaxError does not give out of control stack trace HTML response
+    config.middleware.insert_before ActionDispatch::ParamsParser, "CatchSyntaxErrors"
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.

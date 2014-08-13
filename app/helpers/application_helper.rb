@@ -20,15 +20,15 @@ module ApplicationHelper
 
     token = request.headers['X-User-Token']
     if(token.blank?)
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request\n"
-      render :status => 401, :json => I18n.t("401response")
+      logger.error "ensureLoggedInAndAuthTokenNotExpired(): No auth token found in request\n"
+      render :status => 401, :json => {:error => I18n.t("401response")}
       return
     end
     userInfo = User.deleted.merge(User.active).select("id, email", "current_sign_in_at").where("authentication_token=?", token).limit(1)
     theUser = userInfo[0]
     if(theUser.blank?)
-      logger.info "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}\n"
-      render :status => 401, :json => I18n.t("401response")
+      logger.error "ensureLoggedInAndAuthTokenNotExpired(): No sign-in found for auth token #{token}\n"
+      render :status => 401, :json => {:error => I18n.t("401response")}
       return
     end
 
@@ -39,7 +39,7 @@ module ApplicationHelper
 
     if(isLoginExpired(theUser))
       logger.info "ensureLoggedInAndAuthTokenNotExpired(): The sign-in for auth token #{token} is expired\n"
-      render :status => 401, :json => I18n.t("401response")
+      render :status => 401, :json => {:error => I18n.t("401response")}
       return
     end
 
@@ -67,8 +67,8 @@ module ApplicationHelper
     email = myTestUserSignParams.email
 
     if(email.blank?)
-      logger.info "clearStaleTokenBeforeSignIn(): No email specified for sign-in, can't check token staleness.\n"
-      render :status => :unprocessable_entity, :json => I18n.t("422response_no_email_specified")
+      logger.error "clearStaleTokenBeforeSignIn(): No email specified for sign-in, can't check token staleness.\n"
+      render :status => :unprocessable_entity, :json => {:error => I18n.t("422response_no_email_specified")}
       return
     end
 
@@ -81,7 +81,7 @@ module ApplicationHelper
       # If we don't take action here, devise will actually do a successful sign-in
       #
       logger.info "clearStaleTokenBeforeSignIn(): User could not be found for email #{email}.\n"
-      render :status => 401, :json => I18n.t("401response_invalid_email_or_password")
+      render :status => 401, :json => {:error => I18n.t("401response_invalid_email_or_password")}
       return
     end
 

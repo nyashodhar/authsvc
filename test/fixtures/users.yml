@@ -9,9 +9,8 @@ user_<%= n %>:
   id: <%= n %>
   email: <%= "user#{n}@petpal.com" %>
   encrypted_password: <%= "$2a$10$KveIRN9meMEfEyA7Dm.M5.jmkDeaHvww4dlq1Bkhb9w0e90nEf57S" %>
-  reset_password_token: nil
-  reset_password_token: <%= n %>
-  reset_password_sent_at: nil
+  reset_password_token: NULL
+  reset_password_sent_at: NULL
   remember_created_at: nil
   sign_in_count: 0
   current_sign_in_at: nil
@@ -23,4 +22,8 @@ user_<%= n %>:
   authentication_token: <%= "authToken#{n}" %>
   deleted_at: nil
   inactive: NULL
+  confirmation_token: <%= "confirmationtoken#{n}" %>
+  confirmed_at: nil
+  confirmation_sent_at: <%= Time.now %>
+  unconfirmed_email: NULL
 <% end %>
