@@ -79,14 +79,12 @@ en:
   ##########################
 
   # views/devise/mailer/confirmation_instructions.erb
-  confirmation_instructions_title: "Welcome to PetPal!"
-  confirmation_instructions_paragraph1: "The PetPal team is excited to welcome you as a member! If we had tails we would be wagging!"
+  confirmation_instructions_title: "PetPal Account Confirmation!"
+  confirmation_instructions_paragraph1: "We are excited to have you as a PetPal member! If we had tails we would be wagging!"
   confirmation_instructions_paragraph2: "Please click the link below to confirm your email address."
   confirmation_instructions_paragraph3: "Have fun!"
   confirmation_instructions_link_confirm_account: "Confirm my account"
   confirmation_instructions_paren_only_click_once: "(You can only click this link once)"
-  confirmation_instructions_link_unsubscribe: "Unsubscribe"
-  confirmation_instructions_sentence_unsubscribe: "if you do not wish to receive these emails in the future."
 
   # views/devise/mailer/reset_password_instructions.html.erb
   reset_password_instructions_title: "Change your password"
