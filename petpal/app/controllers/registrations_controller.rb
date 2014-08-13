@@ -113,7 +113,7 @@ class RegistrationsController < Devise::RegistrationsController
 
     if resource.save
 
-      logger.info "Created user #{resource.email}\n"
+      logger.info "User #{resource.email} has been created.\n"
       the_response = { :id => resource.id, :email => resource.email}
       enable_test_hooks = Rails.application.config.enable_test_hooks
 
