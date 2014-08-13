@@ -154,10 +154,9 @@ class RegistrationsController < Devise::RegistrationsController
 
   ##################
   # Trigger the sending of a confirmation email for the user
-  # TODO: THIS SHOULD BE POST - AN CONFIRMATION INSTRUCTION IS CREATED - NOT UPDATED
-  # PUT /user/confirmation
+  # POST /user/email/confirmation
   # 412 - If the email address of the user if already confirmed
-  # curl -v -X PUT http://127.0.0.1:3000/user/confirmation -H "Content-Length: 0" -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
+  # curl -v -X POST http://127.0.0.1:3000/user/email/confirmation -H "Content-Length: 0" -H "Accept: application/json" -H "Content-Type: application/json" -H "X-User-Token: a6XK1qPfwyNd_HqjsgSS"
   ##################
   def triggerConfirmation
 
@@ -177,7 +176,7 @@ class RegistrationsController < Devise::RegistrationsController
         the_response[:confirmation_token] = raw_token
       end
 
-      render :status => 200, :json => the_response
+      render :status => 201, :json => the_response
     else
       if(!user.errors.messages[:email].blank?)
         logger.error "Devise said: \"#{user.errors.messages[:email]}\". Interpret as no email confirmation pending for #{user.email} (user id: #{user.id}), instructions will not be emailed.\n"

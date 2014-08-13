@@ -241,7 +241,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     # Try to trigger email to be sent, should give 401 since it's a protected API call
 
     trigger_email_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => "bogus123"}
-    put "user/confirmation", nil, trigger_email_request_headers
+    post "user/email/confirmation", nil, trigger_email_request_headers
     assert_response :unauthorized
 
     # Do a login
@@ -264,8 +264,8 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     # Trigger sending of email confirmation to be sent, should succeed
 
     trigger_email_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => auth_token}
-    put "user/confirmation", nil, trigger_email_request_headers
-    assert_response :success
+    post "user/email/confirmation", nil, trigger_email_request_headers
+    assert_response :created
     trigger_response = JSON.parse(response.body)
     assert_not_nil(trigger_response["confirmation_sent_at"])
     assert_not_nil(trigger_response["confirmation_token"])
@@ -305,7 +305,7 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
     #
 
     trigger_email_request_headers = {'Content-Type' => 'application/json', 'X-User-Token' => auth_token}
-    put "user/confirmation", nil, trigger_email_request_headers
+    post "user/email/confirmation", nil, trigger_email_request_headers
     assert_response :precondition_failed
   end
 
