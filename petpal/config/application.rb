@@ -10,7 +10,7 @@ module Petpal
   class Application < Rails::Application
 
     # From-address for mailer
-    config.mailer_sender = "usermanager@petpal.moby"
+    config.mailer_sender = "usermanager@petpal.mobi"
 
     # Enable some hooks for testing purposes - only set to true in test env
     config.enable_test_hooks = false
