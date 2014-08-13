@@ -9,6 +9,9 @@ Bundler.require(*Rails.groups)
 module Petpal
   class Application < Rails::Application
 
+    # Enable some hooks for testing purposes - only set to true in test env
+    config.enable_test_hooks = false
+
     # Ensure JSON parsing errors get nice JSON responses
     config.middleware.insert_before ActionDispatch::ParamsParser, "CatchJsonParseErrors"
 
