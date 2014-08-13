@@ -21,9 +21,75 @@
 
 en:
   hello: "Hello world"
+  400response_middleware_invalid_json: "There was a problem in your JSON"
   401response: "Not authorized."
   401response_invalid_email_or_password: "Invalid email or password."
+  404response_resource_not_found: "Resource not found"
   422response_current_password_confirmation_failure: "Current password confirmation failed."
   422response_no_password_specified: "No password specified."
   422response_no_email_specified: "No email specified."
   422response_unable_to_update_user: "User could not be updated."
+  500response_internal_server_error: "Internal Server Error"
+
+  ##########################
+  # SHARED (WEB AND EMAILS)
+  ##########################
+
+  common_product_name: "PetPal"
+  common_copyright: "©"
+
+  ##########################
+  # WEB PAGES
+  ##########################
+
+  # views/devise/passwords/edit.html.erb
+  passwords_edit_title: "Change your password"
+  passwords_edit_formlabel_new_password: "New password:"
+  passwords_edit_formlabel_confirm_new_password: "Confirm new password:"
+  passwords_edit_submit_button_change_password: "Change my password"
+
+  # views/users/errors/unexpected_error.erb
+  unexpected_error_title: "Something went wrong"
+  unexpected_error_paragraph1: "There was a problem with your request."
+  unexpected_error_paragraph2: "We're sorry if it gave you a long face."
+  unexpected_error_paragraph3: "Hopefully tails will be wagging again very soon."
+
+  # views/users/errors/page_not_found.erb
+  page_not_found_title: "Page Not Found"
+  page_not_found_paragraph1: "We put our smartest pal on the case, but couldn't find the page you are looking for."
+  page_not_found_paragraph2: "We'll look at our pal's notes later and try to find what you were looking for."
+
+  # views/users/confirmations/confirmation_failed.erb
+  confirmation_failed_title: "Account confirmation failed"
+  confirmation_failed_paragraph1: "The link you pressed is no longer valid, or your email might already be confirmed."
+  confirmation_failed_paragraph2: "If your email is not confirmed yet, you can create a new link from your PetPal app and try again."
+
+  # views/users/confirmations/confirmation_successful.erb
+  confirmation_successful_title: "Your account has been confirmed!"
+  confirmation_successful_paragraph1: "We're happy you peeked through so we can know you better."
+  confirmation_successful_paragraph2: "The link you used to reach this page can not be used again, but we hope to see you again soon in the PetPal app!"
+
+  # views/users/confirmations/password_reset_successful.erb
+  password_reset_successful_title: "Your password has been updated!"
+  password_reset_successful_paragraph1: "Congratulations, you have jumped through the hoop!"
+  password_reset_successful_paragraph2: "When you return to the PetPal app, you can use your new password to log in."
+
+  ##########################
+  # EMAILS
+  ##########################
+
+  # views/devise/mailer/confirmation_instructions.erb
+  confirmation_instructions_title: "PetPal Account Confirmation!"
+  confirmation_instructions_paragraph1: "We are excited to have you as a PetPal member! If we had tails we would be wagging!"
+  confirmation_instructions_paragraph2: "Please click the link below to confirm your email address."
+  confirmation_instructions_paragraph3: "Have fun!"
+  confirmation_instructions_link_confirm_account: "Confirm my account"
+  confirmation_instructions_paren_only_click_once: "(You can only click this link once)"
+
+  # views/devise/mailer/reset_password_instructions.html.erb
+  reset_password_instructions_title: "Change your password"
+  reset_password_instructions_hello: "Hello, %{email}!"
+  reset_password_instructions_paragraph1: "Our guard dog says someone wants to change your PetPal password."
+  reset_password_instructions_paragraph2: "If you didn't request this, please ignore this email and excuse us for barking up the wrong tree."
+  reset_password_instructions_paragraph3: "Your password won't change until you access the link below and create a new one."
+  reset_password_instructions_reset_password: "Change my password"
