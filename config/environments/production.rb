@@ -49,7 +49,7 @@ Rails.application.configure do
   # config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  config.log_level = :info
+  # config.log_level = :info
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -80,8 +80,9 @@ Rails.application.configure do
 
   #Logger Config
   #config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-prod.log', 'daily'))
-  #config.logger = Logger.new(STDOUT)
-
+  config.logger = Logger.new(STDOUT)
+  config.logger.level = Logger::DEBUG
+  
   # Disable automatic flushing of the log to improve performance.
   # config.autoflush_log = false
 
