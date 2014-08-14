@@ -1,7 +1,9 @@
 *.rbc
 capybara-*.html
 .rspec
-/log
+/log/petpal-dev*
+/log/petpal-test*
+/log/.*
 /tmp
 /db/*.sqlite3
 /public/system
