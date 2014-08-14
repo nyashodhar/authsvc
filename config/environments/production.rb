@@ -79,7 +79,7 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   #Logger Config
-  config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-prod.log', 'daily'))
+  #config.logger = ActiveSupport::TaggedLogging.new(Logger.new('log/petpal-prod.log', 'daily'))
   #config.logger = Logger.new(STDOUT)
 
   # Disable automatic flushing of the log to improve performance.
