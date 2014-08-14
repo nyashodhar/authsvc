@@ -109,7 +109,7 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   def create
 
-    STDOUT.write "Hello trying to create a user #{resource.email}!\n"
+    STDOUT.write "Hello trying to create a user\n"
 
     build_resource(sign_up_params)
 
