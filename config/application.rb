@@ -9,6 +9,9 @@ Bundler.require(*Rails.groups)
 module Petpal
   class Application < Rails::Application
 
+    # Attempt to make that STDOUT is flushed in heroku environment
+    $stdout.sync = true
+
     # From-address for mailer
     config.mailer_sender = "usermanager@petpal.mobi"
 
