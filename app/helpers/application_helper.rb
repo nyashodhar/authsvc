@@ -80,7 +80,7 @@ module ApplicationHelper
       # We couldn't find a user with the given email => Do 401 here.
       # If we don't take action here, devise will actually do a successful sign-in
       #
-      STDOUT.write "clearStaleTokenBeforeSignIn(): User could not be found for email #{email}.\n"
+      logger.info "clearStaleTokenBeforeSignIn(): User could not be found for email #{email}.\n"
       render :status => 401, :json => {:error => I18n.t("401response_invalid_email_or_password")}
       return
     end

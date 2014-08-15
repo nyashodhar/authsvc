@@ -109,13 +109,11 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   def create
 
-    STDOUT.write "Hello trying to create a user\n"
-
     build_resource(sign_up_params)
 
     if resource.save
 
-      STDOUT.write "User #{resource.email} has been created.\n"
+      logger.info "User #{resource.email} has been created.\n"
       the_response = { :id => resource.id, :email => resource.email}
       enable_test_hooks = Rails.application.config.enable_test_hooks
 
@@ -129,13 +127,13 @@ class RegistrationsController < Devise::RegistrationsController
         #
 
         raw_token = resource.instance_variable_get("@raw_confirmation_token")
-        STDOUT.write "Including raw confirmation token in response: #{raw_token}\n"
+        logger.info "Including raw confirmation token in response: #{raw_token}\n"
         the_response[:confirmation_token] = raw_token
       end
 
       render :status => 200, :json => the_response
     else
-      STDOUT.write "Could not create a user with email #{resource.email}\n"
+      logger.info "Could not create a user with email #{resource.email}\n"
 	   	render :json => resource.errors, :status => :unprocessable_entity
 		end
   end
