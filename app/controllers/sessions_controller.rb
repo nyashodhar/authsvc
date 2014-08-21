@@ -32,7 +32,7 @@ class SessionsController < Devise::SessionsController
   # GET /user/token/verify
   # EXAMPLE LOCAL:
   #   curl -v -X GET http://127.0.0.1:3000/user/auth -H "X-User-Token: GcZy__QhxcxFvdqgpTtz"
-  # EXAMPLE CI:
+  # EXAMPLE CI: 
   #   curl -v -X GET https://authpetpalci.herokuapp.com/user/auth -H "X-User-Token: KVNJ9J2DSZ9boGcz4HNi"
   ################
   def verify
