@@ -105,7 +105,10 @@ class RegistrationsController < Devise::RegistrationsController
   ##################
   # Create user
   # POST /user
-  # curl -v -X POST http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+  # EXAMPLE LOCAL:
+  #  curl -v -X POST http://127.0.0.1:3000/user -H "Content-Type: application/json" -d '{"user":{"email":"test@example.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
+  # EXAMPLE CI:
+  #  curl -v -X POST https://authpetpalci.herokuapp.com/user -H "Content-Type: application/json" -d '{"user":{"email":"herrstrudel@gmail.com", "password":"Test1234", "password_confirmation":"Test1234"}}'
   ##################
   def create
 
