@@ -1,4 +1,5 @@
 *.rbc
+authpetpalci/*
 capybara-*.html
 .idea/*
 .rspec
