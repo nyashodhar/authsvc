@@ -32,6 +32,8 @@ Rails.application.routes.draw do
     match "*path", to: "errors#not_found", via: :all
   end
 
+  get "/", to: "deployments#status", as: 'status'
+
   devise_for :users
 
   # The priority is based upon order of creation: first created -> highest priority.
