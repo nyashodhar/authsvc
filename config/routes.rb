@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'profiles/secureLookup', to:'profiles#secureLookup', as: 'secureLookup'
-
   devise_scope :user do
 
     # RegistrationsController:
