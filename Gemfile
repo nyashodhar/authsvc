@@ -22,6 +22,13 @@ gem 'devise'
 # Simple token authentication
 gem 'simple_token_authentication'
 
+#
+# This is used for executing integration tests against
+# a remotely running instance of the auth service
+#
+
+gem "rest-client"
+
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks

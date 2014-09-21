@@ -3,43 +3,6 @@ require 'test_helper'
 class LoginFlowsTest < ActionDispatch::IntegrationTest
 
   #
-  # Verify that a bunch of devise MVC HTML controllers are disabled and give 404 page
-  #
-  test "Devise controllers are disabled in routes" do
-
-    my_request_headers = {'Content-Type' => 'application/json'}
-    get "users/sign_in", nil, my_request_headers
-    assert_response :not_found
-    assert(response.headers["Content-Type"].downcase.include?("text/html"))
-
-    my_request_headers = {'Content-Type' => 'application/json'}
-    get "users/sign_up", nil, my_request_headers
-    assert_response :not_found
-    assert(response.headers["Content-Type"].downcase.include?("text/html"))
-
-    my_request_headers = {'Content-Type' => 'application/json'}
-    get "users/password/new", nil, my_request_headers
-    assert_response :not_found
-    assert(response.headers["Content-Type"].downcase.include?("text/html"))
-
-    # This one we are actually using now that password reset is introduced.
-    #my_request_headers = {'Content-Type' => 'application/json'}
-    #get "users/password/edit", nil, my_request_headers
-    #assert_response :not_found
-    #assert(response.headers["Content-Type"].downcase.include?("text/html"))
-
-    my_request_headers = {'Content-Type' => 'application/json'}
-    get "users/unlock", nil, my_request_headers
-    assert_response :not_found
-    assert(response.headers["Content-Type"].downcase.include?("text/html"))
-
-    my_request_headers = {'Content-Type' => 'application/json'}
-    get "users/unlock/new", nil, my_request_headers
-    assert_response :not_found
-    assert(response.headers["Content-Type"].downcase.include?("text/html"))
-  end
-
-  #
   # Trigger a password reset
   # Omit email - get 422
   # Use bogus email
@@ -740,4 +703,6 @@ class LoginFlowsTest < ActionDispatch::IntegrationTest
 	  post "user/auth", login_request, headers
 	  assert_response(401)
 	end
+
 end
+

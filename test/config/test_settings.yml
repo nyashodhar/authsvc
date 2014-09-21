@@ -1,0 +1,13 @@
+###########################################
+# This file contains some URLs used for
+# RestClient connections in integration tests
+###########################################
+
+test:
+  target_service_url: http://127.0.0.1:3000
+
+development:
+  target_service_url: http://127.0.0.1:3000
+
+production:
+  target_service_url: https://authpetpalci.herokuapp.com
