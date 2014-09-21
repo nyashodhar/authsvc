@@ -3,54 +3,6 @@ require 'test_helper'
 class LoginFlowsTest < ActionDispatch::IntegrationTest
 
   #
-  # Trigger a password reset
-  # Omit email - get 422
-  # Use bogus email
-  #   - get 201 and no token
-  #   - Verify fields in db
-  # User real email - get 201 with token
-  #   - get 201 and token
-  #   - Verify fields in db
-  #
-  test "Test password reset trigger API" do
-
-    reset_request = '{}'
-    reset_headers = { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
-
-    # Omit email - get 422
-    post "user/password/reset", reset_request, reset_headers
-    assert_response :unprocessable_entity
-
-    # Bogus email - get 201
-    reset_request = '{"email":"whatever@petpal.com"}'
-    post "user/password/reset", reset_request, reset_headers
-    assert_response :created
-    reset_response = JSON.parse(response.body)
-    assert_not_nil(reset_response["email"])
-    assert_not_nil(reset_response["reset_password_sent_at"])
-    assert_nil(reset_response["reset_password_token"])
-
-    # Valid email - get 201 response and token
-
-    user = User.find_by_email("user1@petpal.com")
-    assert(user.reset_password_token.blank?)
-    assert(user.reset_password_sent_at.blank?)
-
-    reset_request = '{"email":"user1@petpal.com"}'
-    post "user/password/reset", reset_request, reset_headers
-    assert_response :created
-    reset_response = JSON.parse(response.body)
-    assert_not_nil(reset_response["email"])
-    assert_not_nil(reset_response["reset_password_sent_at"])
-    assert_not_nil(reset_response["reset_password_token"])
-
-    user = User.find_by_email("user1@petpal.com")
-    assert(!user.reset_password_token.blank?)
-    assert(!user.reset_password_sent_at.blank?)
-  end
-
-
-  #
   # Test that the email address can be changed
   # - Do login
   # - Do user edit and update email address to an address not in in use by other user => should be successful

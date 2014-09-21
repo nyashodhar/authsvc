@@ -5,36 +5,35 @@ class RemoteIntegrationTest < BaseIntegrationTest
     @target_svc_base_url = @@test_settings_util.get_target_service_url
   end
 
-  ##########################################################
+  ###############################################
   #
-  # Performs all the testing needed to verify that the
-  # auth filter protection is applied correctly for the
-  # API specified.
+  # When we are running a test against a remote
+  # service, we don't have test fixture containing
+  # valid list of emails. This method is used to
+  # create a new user to be used in test-cases
   #
-  ##########################################################
-  def check_api_is_protected(http_method, api_uri, request_body)
+  ###############################################
+  def obtain_user_email
 
-    validate_http_method(http_method)
+    time = Time.new
+    email_to_create = "integrationtest-#{time.year}#{time.month}#{time.day}-#{time.hour}#{time.min}-#{time.usec}@petpal.com"
+    password = "Test1234"
 
-    my_headers = create_headers_with_auth_token(http_method, api_uri)
+    registration_request_user = { "email" => email_to_create, "password" => password, "password_confirmation" => password }
+    registration_request = { "user" => registration_request_user}
+    registration_request_headers = create_headers("POST")
 
-    #
-    # Do checking to check 401 is given under normal circumstances
-    #
+    response = do_post_with_headers("user", registration_request.to_json, registration_request_headers)
+    assert_response_code(response, 200)
 
-    # If auth token is missing, the filter should give a 401..
-    my_headers.delete('X-User-Token')
-    response = exercise_api(http_method, api_uri, request_body, my_headers)
-    assert_response_code(response, 401)
+    # create the user
+    the_response_hash = JSON.parse(response.body)
+    assert_not_nil(the_response_hash["email"])
+    assert(the_response_hash["email"].eql?(email_to_create))
+    assert_not_nil(the_response_hash["id"])
 
-    # If auth token is bad, there should be a downstream 401 and the filter should pass on the 401
-    my_headers['X-User-Token'] = "BAD"
-    response = exercise_api(http_method, api_uri, request_body, my_headers)
-    assert_response_code(response, 401)
-
-    STDOUT.write "Good news: The API \'#{http_method} #{api_uri}\' passed auth tests.\n"
+    return email_to_create
   end
-
 
   def create_headers(http_method)
     return {'Content-Type' => 'application/json', 'Accept' => 'application/json' }

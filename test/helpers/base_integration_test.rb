@@ -2,6 +2,10 @@ class BaseIntegrationTest < ActionDispatch::IntegrationTest
 
   @@test_settings_util = TestSettingsUtil.new
 
+  setup do
+    @local_test = false
+  end
+
   def exercise_api(http_method, api_uri, request_body, my_headers)
 
     if(http_method.eql?("POST"))

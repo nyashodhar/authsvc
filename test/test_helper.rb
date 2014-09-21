@@ -8,6 +8,7 @@ require 'helpers/base_integration_test'
 require 'integration/local_integration_test'
 require 'remote/remote_integration_test'
 
+require 'controllers/registrations_controller_tests'
 require 'helpers/page_not_found_tests'
 
 class ActiveSupport::TestCase

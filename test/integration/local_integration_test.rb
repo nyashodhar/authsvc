@@ -1,6 +1,16 @@
 
 class LocalIntegrationTest < BaseIntegrationTest
 
+  setup do
+    @local_test = true
+  end
+
+  def obtain_user_email
+    # TODO: Could do better where, e.g. grab a random email
+    # from the test fixture. For now, just send back the first known one
+    return "user1@petpal.com"
+  end
+
   def create_headers(http_method)
     if(http_method.eql?("POST") || http_method.eql?("PUT"))
       return { 'CONTENT_TYPE' => 'application/json', 'ACCEPT' => 'application/json' }
