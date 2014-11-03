@@ -40,10 +40,14 @@ gem 'spring',        group: :development
 # Use unicorn as the app server
 # gem 'unicorn'
 
+# GET to load ENV variables from .env files
+gem 'dotenv-rails', :groups => [:development, :test]
+gem 'dotenv-deployment', :groups =>[:production]
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
 gem 'byebug',          group: [:development, :test]
 gem 'sqlite3',         group: [:development, :test]
-gem 'pg', group: :production
+#gem 'pg', group: :production
