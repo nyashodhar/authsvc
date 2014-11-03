@@ -44,6 +44,9 @@ gem 'spring',        group: :development
 gem 'dotenv-rails', :groups => [:development, :test]
 gem 'dotenv-deployment', :groups =>[:production]
 
+#EngineYard Specific
+gem 'ey_config'
+
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 

@@ -7,18 +7,34 @@ Rails.application.configure do
   # Setting for auth token expiration
   config.auth_token_ttl_ms = 6000000
 
-  config.action_mailer.default_url_options = {
-      :host => 'authpetpalci.herokuapp.com'
-  }
+  ############## ENGINEYARD - MAILGUN CONFIG #################
   config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
   config.action_mailer.smtp_settings = {
-      :port => '587',
-      :address => 'smtp.mandrillapp.com',
-      :user_name => ENV['MANDRILL_USERNAME'],
-      :password => ENV['MANDRILL_APIKEY'],
-      :domain => 'heroku.com',
-      :authentication => :plain
+       :authentication => :plain,
+       :address => "smtp.mailgun.org",
+       :port => 587,
+       :domain => EY::Config.get(:mailgun, 'MAILGUN_DOMAIN'),
+       :user_name => EY::Config.get(:mailgun, 'MAILGUN_SMTP_USER'),
+       :password => EY::Config.get(:mailgun, 'MAILGUN_SMTP_PASSWORD')
   }
+  #################### END - EY-MAILGUN CONFIG ################
+
+  
+  # config.action_mailer.default_url_options = {
+  #     :host => 'authpetpalci.herokuapp.com'
+  # }
+
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #     :port => '587',
+  #     :address => 'smtp.mandrillapp.com',
+  #     :user_name => ENV['MANDRILL_USERNAME'],
+  #     :password => ENV['MANDRILL_APIKEY'],
+  #     :domain => 'heroku.com',
+  #     :authentication => :plain
+  # }
 
   # Code is not reloaded between requests.
   config.cache_classes = true
