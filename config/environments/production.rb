@@ -21,10 +21,10 @@ Rails.application.configure do
   }
   #################### END - EY-MAILGUN CONFIG ################
 
-  
-  # config.action_mailer.default_url_options = {
-  #     :host => 'authpetpalci.herokuapp.com'
-  # }
+
+  config.action_mailer.default_url_options = {
+      :host => 'http://ec2-54-172-145-228.compute-1.amazonaws.com/'
+  }
 
   # config.action_mailer.delivery_method = :smtp
   # config.action_mailer.smtp_settings = {
